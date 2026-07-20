@@ -1,26 +1,67 @@
 @import "tailwindcss";
 
+/*
+ * Design tokens — Jerry & Pam wedding site.
+ *
+ * Usage rules (follow everywhere, not just here):
+ *   - Ivory is the page. Target roughly 70% ivory / 20% blue / 10% pink
+ *     across any given screen's surface area.
+ *   - Navy is for headings/nav/footer only. NEVER use navy for long body
+ *     copy — it fails contrast at body text size. Body copy uses ink.
+ *   - Blush is reserved for exactly ONE call-to-action per screen: the
+ *     RSVP button. Do not use blush for anything else (no icons, no
+ *     hover states on other elements, no decorative accents).
+ *   - Blue is for borders, dividers, and section background tints.
+ *   - Pink is for soft background washes (larger, low-saturation fills).
+ *
+ * These are defined as CSS variables (source of truth) and mirrored into
+ * Tailwind's theme via @theme, so both `var(--color-navy)` and Tailwind
+ * utilities like `bg-navy` / `text-navy` / `border-blue` resolve to the
+ * same value. Tailwind v4 uses this CSS-first config instead of
+ * tailwind.config.js — there is no separate config file to keep in sync.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-navy: #4a668d;
+  --color-blue: #9db2cf;
+  --color-blush: #ffb7c8;
+  --color-pink: #ffd8e1;
+  --color-ivory: #fdfbf8;
+  --color-ink: #1f2937;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-navy: var(--color-navy);
+  --color-blue: var(--color-blue);
+  --color-blush: var(--color-blush);
+  --color-pink: var(--color-pink);
+  --color-ivory: var(--color-ivory);
+  --color-ink: var(--color-ink);
+
+  --font-display: var(--font-cormorant), serif;
+  --font-body: var(--font-body-sans), sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/*
+ * These base element rules must live inside Tailwind's `base` layer.
+ * Cascade layers ignore specificity across layers — any unlayered rule
+ * beats every layered rule (including utilities), regardless of
+ * selector weight. Left unlayered, a plain `h1 { color: navy }` here
+ * would permanently out-rank utilities like `text-ivory` on headings.
+ */
+@layer base {
+  body {
+    background: var(--color-ivory);
+    color: var(--color-ink);
+    font-family: var(--font-body);
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--color-navy);
+    font-family: var(--font-display);
+  }
 }
