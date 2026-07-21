@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PageHeader } from "@/components/page-header";
 import { Reveal } from "@/lib/motion/reveal";
 
 // Ceremony time is confirmed (see CLAUDE.md). Venue/address are pending
@@ -38,14 +39,7 @@ const MAP_EMBED_URL: string | null = null;
 export default function DetailsPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 md:py-24 lg:px-8">
-      <header>
-        <p className="text-xs tracking-[0.3em] text-navy uppercase">
-          The Details
-        </p>
-        <h1 className="mt-4 font-display text-5xl text-navy sm:text-6xl">
-          Details
-        </h1>
-      </header>
+      <PageHeader eyebrow="The Details" title="Details" />
 
       <Reveal className="mt-16 grid grid-cols-1 gap-12 sm:grid-cols-2 md:mt-20">
         <div>

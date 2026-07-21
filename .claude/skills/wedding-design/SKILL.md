@@ -87,6 +87,9 @@ Two libraries only: `framer-motion` and `lenis`. Do not add others.
 - **No infinite loops** anywhere except the countdown.
 - Slow and physical. Never bouncy, never springy, never sparkly. If it draws attention to itself as an animation, it is wrong.
 - On mobile: shorter travel distances, and hover effects simply do not exist.
+- **Verifying scroll-reveal content:** `whileInView` does not fire on an instant viewport
+  resize, so Playwright fullPage captures render revealed sections as blank. Always
+  verify with incremental scroll, never fullPage.
 
 ### The signature moment
 
