@@ -1,9 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
+import { getAdminDashboardData } from "@/lib/admin/dashboard-data";
+import { AdminSignIn } from "@/components/admin/admin-sign-in";
+import { AdminDashboard } from "@/components/admin/admin-dashboard";
 
-// Protected shell — auth check only, no table/CSV export UI yet.
-// Signed-in state reads via the `authenticated` RLS policy on `rsvps`;
-// signing in itself (the actual login form) is content, not scaffold,
-// and is intentionally not built here.
+// Auth is Supabase Auth (email/password), entirely separate from the guest
+// `guest_session` cookie gate in src/middleware.ts. Data access goes through
+// the authenticated server client (src/lib/supabase/server.ts) so the
+// `admin_select_guests` / `admin_select_rsvps` RLS policies do the actual
+// authorization — a signed-in non-admin simply gets empty results back.
+// Never import src/lib/supabase/admin.ts (the service-role client) here.
 export default async function AdminPage() {
   const supabase = await createClient();
   const {
@@ -11,24 +16,12 @@ export default async function AdminPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return (
-      <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-        <h1 className="font-display text-4xl">Admin</h1>
-        <p className="mt-4 text-ink/70">
-          [Not signed in — Supabase Auth login placeholder, content
-          pending]
-        </p>
-      </div>
-    );
+    return <AdminSignIn />;
   }
 
+  const { guests, summary } = await getAdminDashboardData(supabase);
+
   return (
-    <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-      <h1 className="font-display text-4xl">Admin</h1>
-      <p className="mt-4 text-ink/70">
-        [Signed in as {user.email} — RSVP table + CSV export placeholder,
-        content pending]
-      </p>
-    </div>
+    <AdminDashboard email={user.email ?? ""} guests={guests} summary={summary} />
   );
 }
