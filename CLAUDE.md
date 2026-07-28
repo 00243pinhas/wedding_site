@@ -10,7 +10,7 @@ Private wedding website. One developer, hard deadline. Ceremony **10 September, 
 - Menu is **display only** — guests do not choose a meal. Never build meal-choice UI.
 - Day-of contacts: Nancy & Esa. **Never** put the couple's phone or email on the site.
 - Gift content and venue address: pending from the client. Use clearly-marked placeholders.
-- Guest access mechanism: **undecided**. Do not implement one.
+- Guest access mechanism: **per-guest invite link**. `/i/[code]` looks up the code against `guests`, sets a signed `guest_session` cookie (`src/lib/auth/guest-session.ts`), and `src/middleware.ts` gates every other route on that cookie, redirecting to `/welcome-gate` when it's missing or invalid. `/admin` and `/i/[code]` itself stay outside the gate — see the exclusion list in `middleware.ts`.
 
 ## Stack
 
@@ -25,6 +25,7 @@ Next.js (App Router) + TypeScript · Tailwind v4 (CSS-first `@theme`, no `tailwi
 5. **Mobile first, all screens supported.** Nearly every guest opens this on a phone.
 6. **No CMS, no admin content editing.** Content lives in code.
 7. **Ask before installing any dependency** not already in `package.json`.
+8. **The service role key bypasses RLS entirely.** It lives in `SUPABASE_SERVICE_ROLE_KEY` (never `NEXT_PUBLIC_`), is used only in server-side code, and must never be imported into a client component or anything that reaches the browser. Any file importing it must not carry `"use client"`.
 
 ## Design
 
