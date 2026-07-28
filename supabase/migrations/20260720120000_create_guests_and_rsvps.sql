@@ -93,7 +93,7 @@ create policy "admin_select_guests"
   to authenticated
   using (
     (auth.jwt() ->> 'email') in (
-      '{{ADMIN_EMAIL_1}}',
+      'pinaslok@gmail.com',
       '{{ADMIN_EMAIL_2}}'
     )
   );
@@ -104,7 +104,7 @@ create policy "admin_select_rsvps"
   to authenticated
   using (
     (auth.jwt() ->> 'email') in (
-      '{{ADMIN_EMAIL_1}}',
+      'pinaslok@gmail.com',
       '{{ADMIN_EMAIL_2}}'
     )
   );
