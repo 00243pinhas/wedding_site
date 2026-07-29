@@ -6,8 +6,7 @@ import { Reveal } from "@/lib/motion/reveal";
 // keep the placeholder block.
 const PHOTO_MOMENT_IMAGE_SRC: string | null = null;
 
-// The second and final wash on the page — copy is pending from the
-// client. Do not invent a line; leave the placeholder until supplied.
+// The second and final wash on the page.
 export function PhotoMoment() {
   return (
     <section className="relative flex h-[55vh] items-center justify-center overflow-hidden md:h-[65vh]">
@@ -27,7 +26,7 @@ export function PhotoMoment() {
 
       <Reveal className="relative z-10 px-4 text-center sm:px-6">
         <p className="font-display text-4xl text-ivory sm:text-5xl">
-          {"{{PHOTO_MOMENT_LINE}}"}
+          Forever starts here
         </p>
       </Reveal>
     </section>

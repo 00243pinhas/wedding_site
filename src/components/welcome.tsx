@@ -1,7 +1,5 @@
 import { Reveal } from "@/lib/motion/reveal";
 
-// Body copy is pending from the client — {{WELCOME_COPY}} stays until
-// real copy is supplied. Do not replace it with invented wedding copy.
 export function Welcome() {
   return (
     <section className="bg-ivory py-20 md:py-[120px]">
@@ -12,7 +10,10 @@ export function Welcome() {
         <h2 className="mt-4 font-display text-4xl text-navy sm:text-5xl">
           We&apos;re getting married
         </h2>
-        <p className="mt-6 leading-[1.7] text-ink">{"{{WELCOME_COPY}}"}</p>
+        <p className="mt-6 leading-[1.7] text-ink">
+          We can&apos;t wait to celebrate this day surrounded by the people
+          we love most — including you.
+        </p>
       </Reveal>
     </section>
   );

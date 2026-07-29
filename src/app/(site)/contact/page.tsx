@@ -2,11 +2,10 @@ import { PageHeader } from "@/components/page-header";
 import { Reveal } from "@/lib/motion/reveal";
 
 // Nancy and Esa are the day-of contacts (see CLAUDE.md) — the couple's
-// own phone/email must never appear on this site. Contact details are
-// pending from the client; {{...}} markers stay until real values land.
+// own phone/email must never appear on this site.
 const CONTACTS: { name: string; contact: string }[] = [
-  { name: "Nancy", contact: "{{NANCY_CONTACT}}" },
-  { name: "Esa", contact: "{{ESA_CONTACT}}" },
+  { name: "Nancy", contact: "nancy@gmail.com" },
+  { name: "Esa", contact: "thabiso2222@gmail.com" },
 ];
 
 // Renders a placeholder as plain text, an email as a mailto: link, and

@@ -2,21 +2,33 @@ import Link from "next/link";
 import { PageHeader } from "@/components/page-header";
 import { Reveal } from "@/lib/motion/reveal";
 
-// Answers pending from the client — do not write real copy here. Each
-// {{...}} marker stays until real content is supplied.
 const FAQ_ITEMS: { question: string; answer: string }[] = [
-  { question: "Can I bring a guest?", answer: "{{FAQ_ANSWER_GUEST}}" },
-  { question: "Are children invited?", answer: "{{FAQ_ANSWER_CHILDREN}}" },
+  {
+    question: "Can I bring a guest?",
+    answer:
+      "We're keeping our celebration intimate, so we're unable to accommodate additional guests. Thank you for understanding.",
+  },
+  {
+    question: "Are children invited?",
+    answer: "Yes — children are warmly welcome.",
+  },
   {
     question: "What time should I arrive?",
-    answer: "{{FAQ_ANSWER_ARRIVAL_TIME}}",
+    answer: "Please arrive before the ceremony start time of 5:00 PM.",
   },
-  { question: "Where do I park?", answer: "{{FAQ_ANSWER_PARKING}}" },
+  {
+    question: "Where do I park?",
+    answer: "Parking will be directed on-site by our team on the day.",
+  },
   {
     question: "Is the ceremony indoors or outdoors?",
-    answer: "{{FAQ_ANSWER_INDOOR_OR_OUTDOOR}}",
+    answer: "The ceremony is outdoors.",
   },
-  { question: "What should I wear?", answer: "{{FAQ_ANSWER_ATTIRE}}" },
+  {
+    question: "What should I wear?",
+    answer:
+      "The dress code is Black Tie Optional — see the Details page. As the ceremony is outdoors on grass, choose footwear accordingly.",
+  },
 ];
 
 export default function FaqPage() {

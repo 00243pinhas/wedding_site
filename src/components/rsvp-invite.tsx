@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { Reveal } from "@/lib/motion/reveal";
 
-// Both lines are pending from the client — {{RSVP_INVITE_LINE}} and
-// {{RSVP_DEADLINE_LINE}} stay until real copy is supplied.
 export function RsvpInvite() {
   return (
     <section className="bg-ivory py-20 md:py-[120px]">
@@ -11,10 +9,10 @@ export function RsvpInvite() {
           Join Us
         </p>
         <h2 className="mt-4 font-display text-4xl text-navy sm:text-5xl">
-          {"{{RSVP_INVITE_LINE}}"}
+          Will you celebrate with us?
         </h2>
         <p className="mt-6 leading-[1.7] text-ink">
-          {"{{RSVP_DEADLINE_LINE}}"}
+          Kindly reply one week before the celebration.
         </p>
 
         <Link

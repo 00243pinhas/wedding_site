@@ -2,13 +2,19 @@ import { Fragment } from "react";
 import Link from "next/link";
 import { Reveal } from "@/lib/motion/reveal";
 
-// Only the dress code is confirmed content. The rest is pending from the
-// client — {{CEREMONY_COPY}} / {{RECEPTION_COPY}} / {{DRESS_CODE_COPY}}
-// stay until real copy is supplied. Do not invent times or venue names.
 const CARDS = [
-  { heading: "The Ceremony", body: "{{CEREMONY_COPY}}" },
-  { heading: "The Reception", body: "{{RECEPTION_COPY}}" },
-  { heading: "Dress Code", body: "Black Tie Optional. {{DRESS_CODE_COPY}}" },
+  {
+    heading: "The Ceremony",
+    body: "The ceremony begins at 5:00 PM. Please arrive before the ceremony time.",
+  },
+  {
+    heading: "The Reception",
+    body: "The reception follows immediately at the same venue.",
+  },
+  {
+    heading: "Dress Code",
+    body: "Black Tie Optional. Formal evening attire — see full details for guidance.",
+  },
 ];
 
 export function DetailsPreview() {

@@ -1,40 +1,33 @@
 import Link from "next/link";
 import { PageHeader } from "@/components/page-header";
+import { VenueMap } from "@/components/venue-map";
 import { Reveal } from "@/lib/motion/reveal";
 
-// Ceremony time is confirmed (see CLAUDE.md). Venue/address are pending
-// from the client — {{...}} markers stay until real copy is supplied.
-// Do not invent venue names, addresses, or times.
+// Ceremony time is confirmed (see CLAUDE.md). Ceremony and reception are
+// the same venue, reception immediately following — venue name and
+// address are still pending from the client.
 const CEREMONY_TIME = "5:00 PM";
-const CEREMONY_VENUE_NAME = "{{CEREMONY_VENUE_NAME}}";
-const CEREMONY_ADDRESS = "{{CEREMONY_ADDRESS}}";
 
-// The reception may turn out to be the same venue as the ceremony (common
-// for single-site weddings) or a separate one. Keep this block's markup
-// identical in shape to the ceremony block above so that, whichever the
-// client confirms, the two-column layout stays balanced and doesn't look
-// broken — e.g. don't collapse this block or add reception-only markup
-// that would make the pair asymmetric if the address is later duplicated.
-const RECEPTION_TIME = "{{RECEPTION_TIME}}";
-const RECEPTION_VENUE_NAME = "{{RECEPTION_VENUE_NAME}}";
-const RECEPTION_ADDRESS = "{{RECEPTION_ADDRESS}}";
+// venue name pending from client
+const VENUE_NAME = "{{VENUE_NAME}}";
+const VENUE_ADDRESS = "PASTE ADDRESS HERE:  ______________________";
 
-const DRESS_CODE_DETAIL = "{{DRESS_CODE_DETAIL}}";
+const RECEPTION_COPY = "The reception follows immediately at the same venue.";
 
-// Placeholder run-of-show — four example rows only, clearly marked with
-// {{...}} tokens. Replace with the real schedule once the client supplies
-// it. Do not invent times or events.
+const DRESS_CODE_MEN =
+  "Tuxedo or dark, formal suit with a white dress shirt. Lean into darker colours — black, navy, charcoal — and deeper jewel tones like emerald and burgundy.";
+const DRESS_CODE_WOMEN =
+  "Evening gown, full-length, or formal midi-length dresses.";
+const DRESS_CODE_NOTE =
+  "The ceremony is outdoors on grass, so please choose footwear accordingly.";
+
+// schedule/order-of-day pending from client
 const SCHEDULE_ITEMS = [
   { time: "{{TIME_1}}", event: "{{EVENT_1 — placeholder}}" },
   { time: "{{TIME_2}}", event: "{{EVENT_2 — placeholder}}" },
   { time: "{{TIME_3}}", event: "{{EVENT_3 — placeholder}}" },
   { time: "{{TIME_4}}", event: "{{EVENT_4 — placeholder}}" },
 ];
-
-// Do NOT wire a Google Maps (or any third-party) embed here until the
-// venue address is confirmed and an API key decision is made with the
-// client — this stays null and renders a sized placeholder block only.
-const MAP_EMBED_URL: string | null = null;
 
 export default function DetailsPage() {
   return (
@@ -48,8 +41,8 @@ export default function DetailsPage() {
           </h2>
           <div className="mt-4 space-y-1 text-ink">
             <p>{CEREMONY_TIME}</p>
-            <p>{CEREMONY_VENUE_NAME}</p>
-            <p>{CEREMONY_ADDRESS}</p>
+            <p>{VENUE_NAME}</p>
+            <p>{VENUE_ADDRESS}</p>
           </div>
         </div>
 
@@ -58,9 +51,9 @@ export default function DetailsPage() {
             Reception
           </h2>
           <div className="mt-4 space-y-1 text-ink">
-            <p>{RECEPTION_TIME}</p>
-            <p>{RECEPTION_VENUE_NAME}</p>
-            <p>{RECEPTION_ADDRESS}</p>
+            <p>{RECEPTION_COPY}</p>
+            <p>{VENUE_NAME}</p>
+            <p>{VENUE_ADDRESS}</p>
           </div>
         </div>
       </Reveal>
@@ -88,17 +81,28 @@ export default function DetailsPage() {
         <h2 className="font-display text-2xl text-navy sm:text-3xl">
           Black Tie Optional
         </h2>
-        <p className="mt-4 leading-[1.7] text-ink">{DRESS_CODE_DETAIL}</p>
+
+        <div className="mt-6">
+          <p className="text-xs tracking-[0.3em] text-navy uppercase">Men</p>
+          <p className="mt-2 leading-[1.7] text-ink">{DRESS_CODE_MEN}</p>
+        </div>
+
+        <div className="mt-6 h-px w-10 bg-blue" />
+
+        <div className="mt-6">
+          <p className="text-xs tracking-[0.3em] text-navy uppercase">
+            Women
+          </p>
+          <p className="mt-2 leading-[1.7] text-ink">{DRESS_CODE_WOMEN}</p>
+        </div>
+
+        <p className="mt-6 leading-[1.7] text-ink">{DRESS_CODE_NOTE}</p>
       </Reveal>
 
       <Reveal className="mt-16 md:mt-20">
         <h2 className="font-display text-2xl text-navy sm:text-3xl">Map</h2>
-        <div className="mt-6 flex aspect-[16/9] w-full items-center justify-center bg-blue/30">
-          {MAP_EMBED_URL ? null : (
-            <p className="text-xs tracking-[0.2em] text-navy uppercase">
-              Map pending venue address
-            </p>
-          )}
+        <div className="mt-6">
+          <VenueMap venueName={VENUE_NAME} address={VENUE_ADDRESS} />
         </div>
       </Reveal>
 
