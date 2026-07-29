@@ -40,3 +40,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# guest data — private, never committed
+/guests_import.csv
+/guest_invite_links.csv
