@@ -50,18 +50,32 @@ export function verifyGuestSessionValue(value: string): string | null {
   return guestId;
 }
 
+function cookieOptions() {
+  return {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax" as const,
+    maxAge: MAX_AGE_SECONDS,
+    path: "/",
+  };
+}
+
 // Call from the route handler that just verified an invite code.
 export function setGuestSessionCookie(
   response: NextResponse,
   guestId: string,
 ): void {
-  response.cookies.set(COOKIE_NAME, sign(guestId), {
-    httpOnly: true,
-    secure: true,
-    sameSite: "lax",
-    maxAge: MAX_AGE_SECONDS,
-    path: "/",
-  });
+  response.cookies.set(COOKIE_NAME, sign(guestId), cookieOptions());
+}
+
+// Call from the Server Action that just verified an invite code — same
+// signing and options as setGuestSessionCookie, but through next/headers'
+// cookies() since a Server Action has no NextResponse to attach to.
+export async function setGuestSessionCookieForAction(
+  guestId: string,
+): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.set(COOKIE_NAME, sign(guestId), cookieOptions());
 }
 
 // Call from Server Components / the RSVP form to read the signed-in guest.

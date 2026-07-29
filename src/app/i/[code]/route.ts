@@ -1,41 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { setGuestSessionCookie } from "@/lib/auth/guest-session";
-import { checkRateLimit } from "@/lib/rate-limit";
+import { verifyInviteCode, getClientIp } from "@/lib/auth/invite-code";
 
 // The guest entry point: /i/{code}. A Route Handler, not a page, because
 // the match path needs to set a cookie and redirect — Next only allows
 // mutating cookies from a Server Action or Route Handler, never from a
-// Server Component render. The guests table is looked up here with the
-// service-role client; the anon client never touches it.
+// Server Component render. The lookup and rate limit live in
+// verifyInviteCode, shared with the welcome-gate code form — this is one
+// of two doors onto the same guest_session cookie, not its own gate.
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ code: string }> },
 ) {
   const { code } = await params;
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    "unknown";
+  const ip = getClientIp(request.headers);
 
-  if (!checkRateLimit(ip)) {
-    return notFoundResponse(429);
-  }
+  const result = await verifyInviteCode(code, ip);
 
-  const supabase = createAdminClient();
-  const { data: guest } = await supabase
-    .from("guests")
-    .select("id")
-    .eq("invite_code", code)
-    .maybeSingle();
-
-  // Same response whether the code is malformed or simply not in the
-  // table — never give an attacker a signal to distinguish the two.
-  if (!guest) {
-    return notFoundResponse(200);
+  // Same response whether the code is malformed, simply not in the
+  // table, or rate limited — never give an attacker a signal to
+  // distinguish the three.
+  if (!result.ok) {
+    return notFoundResponse(result.reason === "rate_limited" ? 429 : 200);
   }
 
   const response = NextResponse.redirect(new URL("/", request.url));
-  setGuestSessionCookie(response, guest.id);
+  setGuestSessionCookie(response, result.guestId);
   return response;
 }
 
