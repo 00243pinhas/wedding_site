@@ -2,11 +2,19 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 import type { NextResponse } from "next/server";
 
-// One place for the guest_session cookie — /i/[code] writes it, Server
-// Components and the RSVP form read it, middleware verifies it on every
-// request. Do not touch this cookie anywhere else.
+// One place for the guest_session cookie — /i/[code] and the welcome-gate
+// form write it, Server Components and the RSVP form read it, middleware
+// verifies it on every request. Do not touch this cookie anywhere else.
 export const COOKIE_NAME = "guest_session";
 const MAX_AGE_SECONDS = 60 * 60 * 24 * 90; // 90 days — outlives the wedding
+
+// A session is either a real guest (has a guests.id an RSVP can attach to)
+// or an owner (Jerry, Pam, the developer) previewing the live site. Owner
+// sessions never carry a guest_id — they must never appear in the guest
+// list, admin dashboard, CSV export, or headcount.
+export type GuestSession =
+  | { type: "guest"; guestId: string }
+  | { type: "owner" };
 
 function getSecret(): string {
   const secret = process.env.COOKIE_SECRET;
@@ -16,26 +24,28 @@ function getSecret(): string {
   return secret;
 }
 
-function sign(guestId: string): string {
+function sign(payload: string): string {
   const signature = createHmac("sha256", getSecret())
-    .update(guestId)
+    .update(payload)
     .digest("hex");
-  return `${guestId}.${signature}`;
+  return `${payload}.${signature}`;
 }
 
-// Guest ids are UUIDs (no "."), so splitting on the last "." unambiguously
-// separates the id from its signature. Exported so middleware can verify
-// the raw cookie value straight from NextRequest.cookies — middleware has
-// no request-scoped AsyncLocalStorage, so the next/headers `cookies()`
-// used by getGuestIdFromCookie below is not available there.
-export function verifyGuestSessionValue(value: string): string | null {
+// Guest ids are UUIDs and the owner payload is the fixed literal "owner" —
+// neither contains ".", so splitting on the last "." unambiguously
+// separates the payload from its signature. Exported so middleware can
+// verify the raw cookie value straight from NextRequest.cookies —
+// middleware has no request-scoped AsyncLocalStorage, so the next/headers
+// `cookies()` used by getGuestSessionFromCookie below is not available
+// there.
+export function verifySessionPayload(value: string): string | null {
   const separatorIndex = value.lastIndexOf(".");
   if (separatorIndex === -1) return null;
 
-  const guestId = value.slice(0, separatorIndex);
+  const payload = value.slice(0, separatorIndex);
   const signature = value.slice(separatorIndex + 1);
   const expected = createHmac("sha256", getSecret())
-    .update(guestId)
+    .update(payload)
     .digest("hex");
 
   const signatureBuffer = Buffer.from(signature, "hex");
@@ -47,7 +57,16 @@ export function verifyGuestSessionValue(value: string): string | null {
     return null;
   }
 
-  return guestId;
+  return payload;
+}
+
+function parseSessionPayload(payload: string | null): GuestSession | null {
+  if (!payload) return null;
+  if (payload === "owner") return { type: "owner" };
+  if (payload.startsWith("guest:")) {
+    return { type: "guest", guestId: payload.slice("guest:".length) };
+  }
+  return null;
 }
 
 function cookieOptions() {
@@ -65,7 +84,7 @@ export function setGuestSessionCookie(
   response: NextResponse,
   guestId: string,
 ): void {
-  response.cookies.set(COOKIE_NAME, sign(guestId), cookieOptions());
+  response.cookies.set(COOKIE_NAME, sign(`guest:${guestId}`), cookieOptions());
 }
 
 // Call from the Server Action that just verified an invite code — same
@@ -75,14 +94,28 @@ export async function setGuestSessionCookieForAction(
   guestId: string,
 ): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.set(COOKIE_NAME, sign(guestId), cookieOptions());
+  cookieStore.set(COOKIE_NAME, sign(`guest:${guestId}`), cookieOptions());
 }
 
-// Call from Server Components / the RSVP form to read the signed-in guest.
-// Returns null if there is no cookie or the signature doesn't verify.
-export async function getGuestIdFromCookie(): Promise<string | null> {
+// Owner entry (see invite-code.ts's OWNER_ACCESS_CODE bypass) never touches
+// `guests` — there's no guest_id to sign, just the "owner" marker.
+export function setOwnerSessionCookie(response: NextResponse): void {
+  response.cookies.set(COOKIE_NAME, sign("owner"), cookieOptions());
+}
+
+// Server Action equivalent of setOwnerSessionCookie — same relationship as
+// setGuestSessionCookieForAction is to setGuestSessionCookie.
+export async function setOwnerSessionCookieForAction(): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.set(COOKIE_NAME, sign("owner"), cookieOptions());
+}
+
+// Call from Server Components / the RSVP form to read the signed-in
+// session. Returns null if there is no cookie or the signature doesn't
+// verify.
+export async function getGuestSessionFromCookie(): Promise<GuestSession | null> {
   const cookieStore = await cookies();
   const raw = cookieStore.get(COOKIE_NAME)?.value;
   if (!raw) return null;
-  return verifyGuestSessionValue(raw);
+  return parseSessionPayload(verifySessionPayload(raw));
 }

@@ -3,7 +3,10 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { verifyInviteCode, getClientIp } from "@/lib/auth/invite-code";
-import { setGuestSessionCookieForAction } from "@/lib/auth/guest-session";
+import {
+  setGuestSessionCookieForAction,
+  setOwnerSessionCookieForAction,
+} from "@/lib/auth/guest-session";
 
 export interface InviteCodeResult {
   ok: boolean;
@@ -28,6 +31,10 @@ export async function submitInviteCode(
     return { ok: false };
   }
 
-  await setGuestSessionCookieForAction(result.guestId);
+  if (result.owner) {
+    await setOwnerSessionCookieForAction();
+  } else {
+    await setGuestSessionCookieForAction(result.guestId);
+  }
   redirect("/");
 }

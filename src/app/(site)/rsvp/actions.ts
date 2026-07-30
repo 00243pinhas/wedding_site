@@ -1,6 +1,6 @@
 "use server";
 
-import { getGuestIdFromCookie } from "@/lib/auth/guest-session";
+import { getGuestSessionFromCookie } from "@/lib/auth/guest-session";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export interface RsvpInput {
@@ -20,15 +20,23 @@ export interface RsvpResult {
 // the form — a client-supplied id would let one guest submit an RSVP as
 // another. This runs with the service-role client, which bypasses RLS, so
 // the max_party_size check below is the only guard before the DB trigger.
+//
+// An owner session (see invite-code.ts's OWNER_ACCESS_CODE bypass) has no
+// guest_id and no guests row to attach an RSVP to — reject it here too,
+// not just in the page UI, since a Server Action is a public endpoint an
+// owner's browser could call directly regardless of what the page renders.
 export async function submitRsvp(input: RsvpInput): Promise<RsvpResult> {
-  const guestId = await getGuestIdFromCookie();
-  if (!guestId) {
+  const session = await getGuestSessionFromCookie();
+  if (!session || session.type === "owner") {
     return {
       ok: false,
       error:
-        "We couldn't verify your invitation. Please open the RSVP link from your personal invitation and try again.",
+        session?.type === "owner"
+          ? "You're viewing as an owner — RSVP is for guests."
+          : "We couldn't verify your invitation. Please open the RSVP link from your personal invitation and try again.",
     };
   }
+  const guestId = session.guestId;
 
   const supabase = createAdminClient();
 

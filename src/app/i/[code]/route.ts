@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { setGuestSessionCookie } from "@/lib/auth/guest-session";
+import {
+  setGuestSessionCookie,
+  setOwnerSessionCookie,
+} from "@/lib/auth/guest-session";
 import { verifyInviteCode, getClientIp } from "@/lib/auth/invite-code";
 
 // The guest entry point: /i/{code}. A Route Handler, not a page, because
@@ -25,7 +28,11 @@ export async function GET(
   }
 
   const response = NextResponse.redirect(new URL("/", request.url));
-  setGuestSessionCookie(response, result.guestId);
+  if (result.owner) {
+    setOwnerSessionCookie(response);
+  } else {
+    setGuestSessionCookie(response, result.guestId);
+  }
   return response;
 }
 

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { COOKIE_NAME, verifyGuestSessionValue } from "@/lib/auth/guest-session";
+import { COOKIE_NAME, verifySessionPayload } from "@/lib/auth/guest-session";
 
 // Guest access gate.
 //
@@ -30,9 +30,9 @@ export function middleware(request: NextRequest) {
   }
 
   const raw = request.cookies.get(COOKIE_NAME)?.value;
-  const guestId = raw ? verifyGuestSessionValue(raw) : null;
+  const session = raw ? verifySessionPayload(raw) : null;
 
-  if (guestId) {
+  if (session) {
     return NextResponse.next();
   }
 

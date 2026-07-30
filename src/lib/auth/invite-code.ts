@@ -1,8 +1,10 @@
+import { createHash, timingSafeEqual } from "node:crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 export type VerifyInviteCodeResult =
-  | { ok: true; guestId: string }
+  | { ok: true; owner: true }
+  | { ok: true; owner: false; guestId: string }
   | { ok: false; reason: "rate_limited" | "not_found" };
 
 // Shared by the /i/[code] link and the welcome-gate code form — both doors
@@ -16,6 +18,10 @@ export async function verifyInviteCode(
     return { ok: false, reason: "rate_limited" };
   }
 
+  if (isOwnerAccessCode(code)) {
+    return { ok: true, owner: true };
+  }
+
   const supabase = createAdminClient();
   const { data: guest } = await supabase
     .from("guests")
@@ -27,7 +33,24 @@ export async function verifyInviteCode(
     return { ok: false, reason: "not_found" };
   }
 
-  return { ok: true, guestId: guest.id };
+  return { ok: true, owner: false, guestId: guest.id };
+}
+
+// Owner bypass for the couple and the developer to view the live site —
+// never looked up against or written to `guests`, so owners can't show up
+// in the guest list, admin dashboard, CSV, or headcount. Checked before the
+// database lookup so an owner entry never touches `guests` at all.
+//
+// SHA-256 both sides first so timingSafeEqual always compares equal-length
+// digests: a raw length check on the submitted code would leak length via
+// an early return, defeating the point of a constant-time compare.
+function isOwnerAccessCode(code: string): boolean {
+  const ownerCode = process.env.OWNER_ACCESS_CODE;
+  if (!ownerCode) return false;
+
+  const submitted = createHash("sha256").update(code).digest();
+  const expected = createHash("sha256").update(ownerCode).digest();
+  return timingSafeEqual(submitted, expected);
 }
 
 // route.ts reads the IP off NextRequest.headers; the welcome-gate action
