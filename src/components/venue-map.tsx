@@ -7,7 +7,7 @@ interface VenueMapProps {
 // third-party script — see CLAUDE.md non-negotiables. Guests get the
 // address as selectable text plus a link out to their own map app.
 export function VenueMap({ venueName, address }: VenueMapProps) {
-  const directionsHref = `https://maps.google.com/?q=${encodeURIComponent(address)}`;
+  const directionsHref = `https://maps.google.com/?q=${encodeURIComponent(`${venueName} ${address}`)}`;
 
   return (
     <div className="border border-blue">

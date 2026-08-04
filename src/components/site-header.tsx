@@ -3,10 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 
-// "Story" is an anchor into the homepage scroll (Our Story is a section,
-// not a route) — the rest are their own fast, findable pages.
 const NAV_LINKS = [
-  { href: "/#story", label: "Story" },
+  { href: "/story", label: "Story" },
   { href: "/details", label: "Details" },
   { href: "/gallery", label: "Gallery" },
   { href: "/faq", label: "FAQ" },

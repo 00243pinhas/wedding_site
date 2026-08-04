@@ -73,7 +73,7 @@ export function Countdown() {
 
   if (!timeLeft) {
     return (
-      <section className="bg-ivory py-10 md:py-14">
+      <section className="bg-ivory pt-10 md:pt-14">
         <p className="mx-auto max-w-[520px] px-4 text-center font-display text-2xl text-navy sm:px-6 sm:text-3xl">
           {POST_WEDDING_LINE}
         </p>
@@ -82,7 +82,7 @@ export function Countdown() {
   }
 
   return (
-    <section className="bg-ivory py-10 md:py-14">
+    <section className="bg-ivory pt-10 md:pt-14">
       <div className="mx-auto flex max-w-[520px] items-start justify-center gap-4 px-4 text-center sm:gap-12 sm:px-6">
         <Unit value={timeLeft.days} label="Days" />
         <Unit value={timeLeft.hours} label="Hours" />

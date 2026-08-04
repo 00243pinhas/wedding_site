@@ -1,26 +1,20 @@
 import Image from "next/image";
 import { Reveal } from "@/lib/motion/reveal";
 
-// Swap to the real photo path once the client delivers it — landscape
-// orientation, unlike the hero/story/gallery portraits. Leave null to
-// keep the placeholder block.
-const PHOTO_MOMENT_IMAGE_SRC: string | null = null;
+const PHOTO_MOMENT_IMAGE_SRC = "/assets/forever-starts-here.jpg";
 
 // The second and final wash on the page.
 export function PhotoMoment() {
   return (
     <section className="relative flex h-[55vh] items-center justify-center overflow-hidden md:h-[65vh]">
       <div className="absolute inset-0">
-        {PHOTO_MOMENT_IMAGE_SRC ? (
-          <Image
-            src={PHOTO_MOMENT_IMAGE_SRC}
-            alt=""
-            fill
-            className="object-cover"
-          />
-        ) : (
-          <div className="h-full w-full bg-blue" />
-        )}
+        <Image
+          src={PHOTO_MOMENT_IMAGE_SRC}
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-[center_10%]"
+        />
         <div className="absolute inset-0 bg-navy/42" />
       </div>
 

@@ -19,8 +19,16 @@ import { COOKIE_NAME, verifySessionPayload } from "@/lib/auth/guest-session";
 //   - /contact     the gate page links here ("reach out to Nancy or
 //                   Esa") — gating it would send that link straight
 //                   back to the gate.
+//   - /assets/     public photos. next/image's optimizer (/_next/image,
+//                   itself excluded below via the matcher) makes an
+//                   internal server-side fetch back to the original file
+//                   to read it — that fetch carries no guest_session
+//                   cookie, so gating /assets/ makes every photo on the
+//                   site fail to optimize. No guest list or RSVP data
+//                   lives here, only photography, so this is safe to
+//                   leave reachable by direct URL.
 //   - Next.js internals / static files, handled by the matcher below.
-const EXCLUDED_PREFIXES = ["/i/", "/admin", "/welcome-gate", "/contact"];
+const EXCLUDED_PREFIXES = ["/i/", "/admin", "/welcome-gate", "/contact", "/assets/"];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

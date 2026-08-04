@@ -3,13 +3,11 @@ import Link from "next/link";
 import { Reveal } from "@/lib/motion/reveal";
 import { EASE_CSS } from "@/lib/motion/constants";
 
-// Swap real photo paths in here — one edit updates the whole band. Leave
-// an entry's src as null to keep its placeholder block.
-const GALLERY_IMAGES: { src: string | null; alt: string }[] = [
-  { src: null, alt: "" },
-  { src: null, alt: "" },
-  { src: null, alt: "" },
-  { src: null, alt: "" },
+const GALLERY_IMAGES: { src: string; alt: string }[] = [
+  { src: "/assets/gallery-preview-1.jpg", alt: "" },
+  { src: "/assets/gallery-preview-2.jpg", alt: "" },
+  { src: "/assets/gallery-preview-3.jpg", alt: "" },
+  { src: "/assets/gallery-preview-4.jpeg", alt: "" },
 ];
 
 export function GalleryPreview() {
@@ -26,17 +24,13 @@ export function GalleryPreview() {
                 className="absolute inset-0 transition-transform duration-500 motion-safe:hover:scale-[1.03]"
                 style={{ transitionTimingFunction: EASE_CSS }}
               >
-                {image.src ? (
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    fill
-                    sizes="(min-width: 768px) 25vw, 50vw"
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="h-full w-full bg-blue ring-1 ring-ivory ring-inset" />
-                )}
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  sizes="(min-width: 768px) 25vw, 50vw"
+                  className="object-cover"
+                />
               </div>
             </div>
           ))}

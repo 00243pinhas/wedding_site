@@ -2,34 +2,12 @@ import { PageHeader } from "@/components/page-header";
 import { Reveal } from "@/lib/motion/reveal";
 
 // Nancy and Esa are the day-of contacts (see CLAUDE.md) — the couple's
-// own phone/email must never appear on this site.
-const CONTACTS: { name: string; contact: string }[] = [
-  { name: "Nancy", contact: "nancy@gmail.com" },
-  { name: "Esa", contact: "thabiso2222@gmail.com" },
+// own phone/email must never appear on this site. Phone numbers were not
+// provided by the client, so each carries a marked placeholder.
+const CONTACTS: { name: string; email: string; phone: string }[] = [
+  { name: "Nancy", email: "nancy@gmail.com", phone: "{{NANCY_PHONE}}" },
+  { name: "Esa", email: "thabiso2222@gmail.com", phone: "{{ESA_PHONE}}" },
 ];
-
-// Renders a placeholder as plain text, an email as a mailto: link, and
-// anything else as a tel: link — without inventing which one it will be.
-function ContactDetail({ contact }: { contact: string }) {
-  if (contact.startsWith("{{")) {
-    return <p className="mt-1 text-ink">{contact}</p>;
-  }
-  if (contact.includes("@")) {
-    return (
-      <a
-        href={`mailto:${contact}`}
-        className="mt-1 block text-ink hover:text-navy"
-      >
-        {contact}
-      </a>
-    );
-  }
-  return (
-    <a href={`tel:${contact}`} className="mt-1 block text-ink hover:text-navy">
-      {contact}
-    </a>
-  );
-}
 
 export default function ContactPage() {
   return (
@@ -51,7 +29,13 @@ export default function ContactPage() {
               <p className="mt-2 text-sm tracking-wide text-ink/70">
                 Day-of contact
               </p>
-              <ContactDetail contact={person.contact} />
+              <a
+                href={`mailto:${person.email}`}
+                className="mt-1 block text-ink hover:text-navy"
+              >
+                {person.email}
+              </a>
+              <p className="mt-1 text-ink">{person.phone}</p>
             </div>
           ))}
         </div>

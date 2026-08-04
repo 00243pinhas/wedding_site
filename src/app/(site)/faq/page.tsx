@@ -27,7 +27,7 @@ const FAQ_ITEMS: { question: string; answer: string }[] = [
   {
     question: "What should I wear?",
     answer:
-      "The dress code is Black Tie Optional — see the Details page. As the ceremony is outdoors on grass, choose footwear accordingly.",
+      "Formal evening attire — see the Details page. As the ceremony is outdoors on grass, choose footwear accordingly.",
   },
 ];
 

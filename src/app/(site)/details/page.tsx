@@ -1,16 +1,17 @@
 import Link from "next/link";
+import Image from "next/image";
 import { PageHeader } from "@/components/page-header";
 import { VenueMap } from "@/components/venue-map";
 import { Reveal } from "@/lib/motion/reveal";
 
 // Ceremony time is confirmed (see CLAUDE.md). Ceremony and reception are
-// the same venue, reception immediately following — venue name and
-// address are still pending from the client.
-const CEREMONY_TIME = "5:00 PM";
+// the same venue, reception immediately following.
+const CEREMONY_COPY =
+  "The event begins at 5:00 PM. Please arrive before the ceremony time.";
 
-// venue name pending from client
-const VENUE_NAME = "{{VENUE_NAME}}";
-const VENUE_ADDRESS = "PASTE ADDRESS HERE:  ______________________";
+const VENUE_NAME = "Çamlıca Köşk Gönül Bahçesi";
+const VENUE_ADDRESS =
+  "Küçük Çamlıca Mah, Üç Pınarlar Cad. Saadet Sk. No:3/2, Üsküdar/İstanbul";
 
 const RECEPTION_COPY = "The reception follows immediately at the same venue.";
 
@@ -21,12 +22,17 @@ const DRESS_CODE_WOMEN =
 const DRESS_CODE_NOTE =
   "The ceremony is outdoors on grass, so please choose footwear accordingly.";
 
-// schedule/order-of-day pending from client
+const DRESS_CODE_GROOM_IMAGE_SRC = "/assets/dress-code-groom.png";
+const DRESS_CODE_BRIDE_IMAGE_SRC = "/assets/dress-code-bride.png";
+
+// Order confirmed by the client — no fixed times given except the 5:00 PM
+// ceremony above, so this renders as a plain sequence, not a timed agenda.
 const SCHEDULE_ITEMS = [
-  { time: "{{TIME_1}}", event: "{{EVENT_1 — placeholder}}" },
-  { time: "{{TIME_2}}", event: "{{EVENT_2 — placeholder}}" },
-  { time: "{{TIME_3}}", event: "{{EVENT_3 — placeholder}}" },
-  { time: "{{TIME_4}}", event: "{{EVENT_4 — placeholder}}" },
+  "Arrival and Welcome",
+  "Ceremony",
+  "Photo Session",
+  "Speeches & Dinner",
+  "Dance",
 ];
 
 export default function DetailsPage() {
@@ -40,7 +46,7 @@ export default function DetailsPage() {
             Ceremony
           </h2>
           <div className="mt-4 space-y-1 text-ink">
-            <p>{CEREMONY_TIME}</p>
+            <p>{CEREMONY_COPY}</p>
             <p>{VENUE_NAME}</p>
             <p>{VENUE_ADDRESS}</p>
           </div>
@@ -65,38 +71,69 @@ export default function DetailsPage() {
         <ul className="mt-6 divide-y divide-blue">
           {SCHEDULE_ITEMS.map((item, index) => (
             <li
-              key={index}
-              className="grid grid-cols-[88px_1fr] gap-6 py-4 sm:grid-cols-[112px_1fr]"
+              key={item}
+              className="grid grid-cols-[32px_1fr] gap-6 py-4"
             >
               <span className="text-sm tracking-wide text-navy">
-                {item.time}
+                {String(index + 1).padStart(2, "0")}
               </span>
-              <span className="text-ink">{item.event}</span>
+              <span className="text-ink">{item}</span>
             </li>
           ))}
         </ul>
       </Reveal>
 
-      <Reveal className="mt-16 md:mt-20">
-        <h2 className="font-display text-2xl text-navy sm:text-3xl">
-          Black Tie Optional
-        </h2>
-
-        <div className="mt-6">
-          <p className="text-xs tracking-[0.3em] text-navy uppercase">Men</p>
-          <p className="mt-2 leading-[1.7] text-ink">{DRESS_CODE_MEN}</p>
+      <Reveal className="relative left-1/2 mt-16 w-screen -mx-[50vw] overflow-hidden md:mt-20">
+        <div className="absolute inset-0 grid grid-cols-1 grid-rows-2 sm:grid-cols-2 sm:grid-rows-1">
+          <div className="relative h-full w-full">
+            <Image
+              src={DRESS_CODE_GROOM_IMAGE_SRC}
+              alt=""
+              fill
+              sizes="(min-width: 640px) 50vw, 100vw"
+              className="object-cover"
+            />
+          </div>
+          <div className="relative h-full w-full">
+            <Image
+              src={DRESS_CODE_BRIDE_IMAGE_SRC}
+              alt=""
+              fill
+              sizes="(min-width: 640px) 50vw, 100vw"
+              className="object-cover"
+            />
+          </div>
         </div>
 
-        <div className="mt-6 h-px w-10 bg-blue" />
+        <div className="absolute inset-0 bg-navy/45" />
 
-        <div className="mt-6">
-          <p className="text-xs tracking-[0.3em] text-navy uppercase">
-            Women
-          </p>
-          <p className="mt-2 leading-[1.7] text-ink">{DRESS_CODE_WOMEN}</p>
+        <div className="relative flex min-h-[560px] items-center justify-center px-4 py-16 sm:px-6 md:min-h-[640px] md:py-20">
+          <div className="w-full max-w-xl bg-ivory/90 px-8 py-10 text-center sm:px-12 sm:py-14">
+            <p className="text-xs tracking-[0.3em] text-navy uppercase">
+              Dress Code
+            </p>
+            <div className="mx-auto mt-4 h-px w-10 bg-blue" />
+
+            <div className="mt-8">
+              <p className="text-xs tracking-[0.3em] text-navy uppercase">
+                Men
+              </p>
+              <p className="mt-2 leading-[1.7] text-ink">{DRESS_CODE_MEN}</p>
+            </div>
+
+            <div className="mx-auto mt-6 h-px w-10 bg-blue" />
+
+            <div className="mt-6">
+              <p className="text-xs tracking-[0.3em] text-navy uppercase">
+                Women
+              </p>
+              <p className="mt-2 leading-[1.7] text-ink">
+                {DRESS_CODE_WOMEN}
+              </p>
+              <p className="mt-2 leading-[1.7] text-ink">{DRESS_CODE_NOTE}</p>
+            </div>
+          </div>
         </div>
-
-        <p className="mt-6 leading-[1.7] text-ink">{DRESS_CODE_NOTE}</p>
       </Reveal>
 
       <Reveal className="mt-16 md:mt-20">

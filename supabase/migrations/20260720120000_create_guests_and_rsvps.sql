@@ -30,6 +30,7 @@ create table if not exists public.rsvps (
 
 create index if not exists rsvps_guest_id_idx on public.rsvps (guest_id);
 
+
 -- Party-size cap
 -- ===============
 -- party_size on an rsvp must never exceed the inviting guest's

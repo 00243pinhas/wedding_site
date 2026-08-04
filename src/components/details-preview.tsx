@@ -5,7 +5,7 @@ import { Reveal } from "@/lib/motion/reveal";
 const CARDS = [
   {
     heading: "The Ceremony",
-    body: "The ceremony begins at 5:00 PM. Please arrive before the ceremony time.",
+    body: "The event begins at 5:00 PM. Please arrive before the ceremony time.",
   },
   {
     heading: "The Reception",
@@ -13,7 +13,7 @@ const CARDS = [
   },
   {
     heading: "Dress Code",
-    body: "Black Tie Optional. Formal evening attire — see full details for guidance.",
+    body: "Formal evening attire — see full details for guidance.",
   },
 ];
 

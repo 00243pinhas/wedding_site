@@ -32,8 +32,8 @@ Roughly **70% ivory / 20% blue+navy / 10% pink+blush**.
 
 ## Typography
 
-- Display / headings: **Cormorant Garamond**, loaded via `next/font`. Navy.
-- Body: a clean readable face (Inter). `ink`. `line-height: 1.7`.
+- Display / headings: **Della Respira**, loaded via `next/font`. Navy. Regular weight only — no bold cut exists, so emphasis comes from size/letterspacing, never faux-bold.
+- Body: **Cormorant Garamond**, loaded via `next/font`. `ink`. `line-height: 1.7`. Regular weight only — nothing in the body relies on bold.
 - Small caps + wide letterspacing (`0.16em`–`0.3em`) for eyebrow labels, nav, and dates. This is where the formality lives.
 - Sentence case in body copy. Uppercase reserved for eyebrows and nav.
 

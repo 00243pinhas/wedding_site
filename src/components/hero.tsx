@@ -7,9 +7,7 @@ import { Reveal } from "@/lib/motion/reveal";
 import { EASE } from "@/lib/motion/constants";
 import { useReducedMotion } from "@/lib/motion/use-reduced-motion";
 
-// Swap to the real photo path once the client delivers it — portrait
-// orientation. Leave null to keep the placeholder block.
-const HERO_IMAGE_SRC: string | null = null;
+const HERO_IMAGE_SRC = "/assets/hero.jpg";
 
 // Stagger step between eyebrow → names → date → button. Four reveals at
 // this spacing (0, 1x, 2x, 3x) plus the 0.8s reveal duration land the
@@ -29,17 +27,14 @@ export function Hero() {
           animate={{ scale: 1 }}
           transition={{ duration: IMAGE_SCALE_DURATION, ease: EASE }}
         >
-          {HERO_IMAGE_SRC ? (
-            <Image
-              src={HERO_IMAGE_SRC}
-              alt=""
-              fill
-              priority
-              className="object-cover"
-            />
-          ) : (
-            <div className="h-full w-full bg-blue" />
-          )}
+          <Image
+            src={HERO_IMAGE_SRC}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[center_20%]"
+          />
         </motion.div>
         <div className="absolute inset-0 bg-navy/42" />
       </div>
@@ -53,13 +48,16 @@ export function Hero() {
 
         <Reveal delay={STAGGER_STEP} className="mt-6">
           <h1 className="font-display text-6xl text-ivory sm:text-7xl">
-            Jerry &amp; Pam
+            Pam &amp; Jerry
           </h1>
         </Reveal>
 
         <Reveal delay={STAGGER_STEP * 2} className="mt-6">
-          <p className="text-sm tracking-[0.2em] text-ivory uppercase">
-            10 September &middot; 5:00 PM
+          <p className="text-xs tracking-[0.3em] text-ivory uppercase">
+            Save The Date
+          </p>
+          <p className="mt-2 text-sm tracking-[0.2em] text-ivory uppercase">
+            10 September
           </p>
         </Reveal>
 

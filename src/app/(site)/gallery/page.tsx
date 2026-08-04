@@ -2,19 +2,18 @@ import Image from "next/image";
 import { PageHeader } from "@/components/page-header";
 import { Reveal } from "@/lib/motion/reveal";
 
-// Swap real photo paths in here — one edit updates the whole grid. Leave
-// an entry's src as null to keep its placeholder block. Fixed 4:5 tiles
-// with object-cover so mixed orientations from the client can't break
-// the layout.
+// Fixed 4:5 tiles with object-cover so mixed orientations from the client
+// can't break the layout. 8 of 9 photos delivered — src: null renders a
+// placeholder tile for the last one, still pending from the client.
 const GALLERY_PHOTOS: { src: string | null; alt: string }[] = [
-  { src: null, alt: "" },
-  { src: null, alt: "" },
-  { src: null, alt: "" },
-  { src: null, alt: "" },
-  { src: null, alt: "" },
-  { src: null, alt: "" },
-  { src: null, alt: "" },
-  { src: null, alt: "" },
+  { src: "/assets/gallery-01.jpg", alt: "" },
+  { src: "/assets/gallery-02.jpg", alt: "" },
+  { src: "/assets/gallery-03.jpg", alt: "" },
+  { src: "/assets/gallery-04.jpg", alt: "" },
+  { src: "/assets/gallery-05.jpeg", alt: "" },
+  { src: "/assets/gallery-06.jpg", alt: "" },
+  { src: "/assets/gallery-07.jpeg", alt: "" },
+  { src: "/assets/gallery-08.jpeg", alt: "" },
   { src: null, alt: "" },
 ];
 
@@ -38,7 +37,7 @@ export default function GalleryPage() {
                 className="object-cover"
               />
             ) : (
-              <div className="h-full w-full bg-blue ring-1 ring-ivory ring-inset" />
+              <div className="h-full w-full bg-blue" />
             )}
           </div>
         ))}

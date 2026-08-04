@@ -1,19 +1,20 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Inter } from "next/font/google";
+import { Della_Respira, Cormorant_Garamond } from "next/font/google";
 import { LenisProvider } from "@/lib/motion/lenis-provider";
 import "./globals.css";
 
-// Display / headings: high-contrast serif.
+// Display / headings: high-contrast serif. Regular weight only — no bold cut exists.
+const dellaRespira = Della_Respira({
+  variable: "--font-della-respira",
+  subsets: ["latin"],
+  weight: ["400"],
+});
+
+// Body copy: serif, regular weight — nothing in the site relies on bold body text.
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
-// Body copy: clean, readable sans.
-const bodySans = Inter({
-  variable: "--font-body-sans",
-  subsets: ["latin"],
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
@@ -29,7 +30,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${bodySans.variable} h-full antialiased`}
+      className={`${dellaRespira.variable} ${cormorant.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-ivory text-ink">
         <LenisProvider>{children}</LenisProvider>
