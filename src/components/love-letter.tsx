@@ -3,13 +3,11 @@ import { Reveal } from "@/lib/motion/reveal";
 
 const LOVE_LETTER_IMAGE_SRC = "/assets/love-letter.jpg";
 
-const PAM_LETTER = `In you I have found a love that honours, that supports me so faithfully, that is sacrificial. I see a love that looks beyond imperfections and will intentionally choose me over and over again.
+const PAM_LETTER = `In you I have found a love that honours, that supports me so faithfully, that is sacrificial and looks beyond imperfections.
 
-Thank you for loving me the way you do, for caring for me so deeply. You give your all and your very best. You are all I have prayed for, and I will never grow tired of telling you that you are God's best gift to me.
-
-I look forward to every day of our adventurous life together. I look forward to becoming your wife, your covenant partner.
-
-I love you, Jerry Clifford Cytheree.`;
+Thank you for loving me the way you do and caring for me so deeply.
+You are all I have prayed for, and I will never grow tired of telling you that you are God's best gift to me.
+I look forward to becoming your wife, your covenant partner and every day of our adventurous life together.`;
 
 const JERRY_LETTER = `My dear spouse to be,
 
@@ -29,10 +27,10 @@ export function LoveLetter() {
         <div className="mt-14 grid grid-cols-1 items-start gap-10 text-left md:mt-16 md:grid-cols-3 md:gap-12 lg:gap-16">
           <div className="md:text-right">
             <h2 className="font-display text-3xl text-navy sm:text-4xl">
-              Pam
+              Jerry
             </h2>
             <p className="mt-6 whitespace-pre-line leading-[1.8] text-ink">
-              {PAM_LETTER}
+              {JERRY_LETTER}
             </p>
           </div>
 
@@ -48,10 +46,10 @@ export function LoveLetter() {
 
           <div>
             <h2 className="font-display text-3xl text-navy sm:text-4xl">
-              Jerry
+              Pam
             </h2>
             <p className="mt-6 whitespace-pre-line leading-[1.8] text-ink">
-              {JERRY_LETTER}
+              {PAM_LETTER}
             </p>
           </div>
         </div>

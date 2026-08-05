@@ -3,18 +3,17 @@ import { PageHeader } from "@/components/page-header";
 import { Reveal } from "@/lib/motion/reveal";
 
 // Fixed 4:5 tiles with object-cover so mixed orientations from the client
-// can't break the layout. 8 of 9 photos delivered — src: null renders a
-// placeholder tile for the last one, still pending from the client.
-const GALLERY_PHOTOS: { src: string | null; alt: string }[] = [
+// can't break the layout.
+const GALLERY_PHOTOS: { src: string; alt: string }[] = [
   { src: "/assets/gallery-01.jpg", alt: "" },
-  { src: "/assets/gallery-02.jpg", alt: "" },
+  { src: "/assets/gallery-02.jpeg", alt: "" },
   { src: "/assets/gallery-03.jpg", alt: "" },
-  { src: "/assets/gallery-04.jpg", alt: "" },
-  { src: "/assets/gallery-05.jpeg", alt: "" },
+  { src: "/assets/gallery-04.jpeg", alt: "" },
+  { src: "/assets/gallery-05.jpg", alt: "" },
   { src: "/assets/gallery-06.jpg", alt: "" },
   { src: "/assets/gallery-07.jpeg", alt: "" },
   { src: "/assets/gallery-08.jpeg", alt: "" },
-  { src: null, alt: "" },
+  { src: "/assets/gallery-09.jpg", alt: "" },
 ];
 
 export default function GalleryPage() {
@@ -28,17 +27,13 @@ export default function GalleryPage() {
             key={index}
             className="relative aspect-[4/5] w-full overflow-hidden"
           >
-            {photo.src ? (
-              <Image
-                src={photo.src}
-                alt={photo.alt}
-                fill
-                sizes="(min-width: 768px) 33vw, 50vw"
-                className="object-cover"
-              />
-            ) : (
-              <div className="h-full w-full bg-blue" />
-            )}
+            <Image
+              src={photo.src}
+              alt={photo.alt}
+              fill
+              sizes="(min-width: 768px) 33vw, 50vw"
+              className="object-cover"
+            />
           </div>
         ))}
       </Reveal>

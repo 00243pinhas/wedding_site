@@ -27,12 +27,16 @@ const DRESS_CODE_BRIDE_IMAGE_SRC = "/assets/dress-code-bride.png";
 
 // Order confirmed by the client — no fixed times given except the 5:00 PM
 // ceremony above, so this renders as a plain sequence, not a timed agenda.
-const SCHEDULE_ITEMS = [
-  "Arrival and Welcome",
-  "Ceremony",
-  "Photo Session",
-  "Speeches & Dinner",
-  "Dance",
+const SCHEDULE_ITEMS: { title: string; description?: string }[] = [
+  { title: "Arrival", description: "Grab a drink, say hello, and settle in." },
+  { title: "The Ceremony", description: "The reason we're all here!" },
+  {
+    title: "Cocktail Hour",
+    description: "A chance to mingle while we sneak away for a few photos.",
+  },
+  { title: "Dinner & Toasts" },
+  { title: "Cake & First Dance" },
+  { title: "Party Time" },
 ];
 
 export default function DetailsPage() {
@@ -71,13 +75,20 @@ export default function DetailsPage() {
         <ul className="mt-6 divide-y divide-blue">
           {SCHEDULE_ITEMS.map((item, index) => (
             <li
-              key={item}
+              key={item.title}
               className="grid grid-cols-[32px_1fr] gap-6 py-4"
             >
               <span className="text-sm tracking-wide text-navy">
                 {String(index + 1).padStart(2, "0")}
               </span>
-              <span className="text-ink">{item}</span>
+              <span>
+                <span className="text-ink">{item.title}</span>
+                {item.description && (
+                  <span className="mt-1 block text-sm text-ink/70">
+                    {item.description}
+                  </span>
+                )}
+              </span>
             </li>
           ))}
         </ul>

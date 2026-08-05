@@ -7,15 +7,14 @@ const NAV_LINKS = [
   { href: "/story", label: "Story" },
   { href: "/details", label: "Details" },
   { href: "/gallery", label: "Gallery" },
-  { href: "/faq", label: "FAQ" },
+  { href: "/contact", label: "Contact" },
+  { href: "/gifts", label: "Gifts" },
 ];
 
 // Plain-text nav links only — no button styling here. Blush is reserved
 // for the single RSVP call-to-action button on each page, so the nav's
-// RSVP link must not compete with it.
-//
-// RSVP renders outside the hamburger on every breakpoint — it must stay
-// visible on mobile even while the rest of the nav is collapsed.
+// links must not compete with it. RSVP and FAQ already have prominent
+// buttons on the landing page, so they live in the footer instead.
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
@@ -42,13 +41,6 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <Link
-            href="/rsvp"
-            className="text-sm tracking-widest text-navy uppercase hover:text-blue"
-          >
-            RSVP
-          </Link>
-
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}

@@ -2,7 +2,7 @@ import Image from "next/image";
 import { PageHeader } from "@/components/page-header";
 import { Reveal } from "@/lib/motion/reveal";
 
-const GIFTS_IMAGE_SRC: string | null = "/assets/Gift.png";
+const GIFTS_IMAGE_SRC = "/assets/Gift.png";
 
 const GIFT_INTRO =
   "If you're thinking of getting us a gift, cash is what we'd most appreciate. But please don't feel boxed in by that. A gift, a card, a small gesture, your company — it's all appreciated. If you do choose to go the cash route, here are the details:";
@@ -13,6 +13,7 @@ const PAM_ACCOUNT: { label: string; value: string }[] = [
   { label: "SWIFT", value: "TVBATR2A" },
   { label: "Account No", value: "001 5800 7303 8643 67" },
   { label: "USD IBAN", value: "TR21 0001 5001 5804 8025 9044 01" },
+  { label: "TL (Lira) IBAN", value: "TR41 0001 5001 5800 7303 8643 67" },
 ];
 
 const JERRY_ACCOUNT: { label: string; value: string }[] = [
@@ -35,11 +36,13 @@ export default function GiftsPage() {
       <PageHeader eyebrow="With Love" title="Gifts" />
 
       <Reveal className="relative mt-16 aspect-[16/9] w-full overflow-hidden md:mt-20">
-        {GIFTS_IMAGE_SRC ? (
-          <Image src={GIFTS_IMAGE_SRC} alt="" fill className="object-cover" />
-        ) : (
-          <div className="h-full w-full bg-blue" />
-        )}
+        <Image
+          src={GIFTS_IMAGE_SRC}
+          alt=""
+          fill
+          sizes="(min-width: 768px) 768px, 100vw"
+          className="object-cover"
+        />
       </Reveal>
 
       <Reveal className="mt-16 md:mt-20">

@@ -12,7 +12,7 @@ export function RsvpInvite() {
           Will you celebrate with us?
         </h2>
         <p className="mt-6 leading-[1.7] text-ink">
-          Kindly reply one week before the celebration.
+          Kindly reply by 20 August.
         </p>
 
         <Link

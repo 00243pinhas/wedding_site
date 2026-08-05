@@ -11,18 +11,18 @@ export function SiteFooter() {
           <ul className="flex items-center justify-center gap-6">
             <li>
               <Link
-                href="/gifts"
+                href="/rsvp"
                 className="text-xs tracking-widest text-ivory uppercase hover:text-blue"
               >
-                Gifts
+                RSVP
               </Link>
             </li>
             <li>
               <Link
-                href="/contact"
+                href="/faq"
                 className="text-xs tracking-widest text-ivory uppercase hover:text-blue"
               >
-                Contact
+                FAQ
               </Link>
             </li>
           </ul>

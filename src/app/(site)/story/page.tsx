@@ -9,12 +9,12 @@ export default function StoryPage() {
     <>
       <section className="bg-ivory pt-20 pb-0 md:pt-[120px]">
         <Reveal className="mx-auto max-w-2xl px-4 text-center sm:px-6">
-          <p className="text-xs tracking-[0.3em] text-navy uppercase">
-            Our Story
-          </p>
-          <h1 className="mt-4 font-display text-5xl text-navy sm:text-6xl">
-            How We Got Here
+          <h1 className="font-display text-5xl text-navy sm:text-6xl">
+            How It Started
           </h1>
+          <p className="mt-4 text-xs tracking-[0.3em] text-navy uppercase">
+            Jerry &amp; Pam&apos;s Story
+          </p>
         </Reveal>
       </section>
 

@@ -7,10 +7,10 @@ export function Welcome({ tightTop = false }: { tightTop?: boolean } = {}) {
     >
       <Reveal className="mx-auto max-w-[520px] px-4 text-center sm:px-6">
         <p className="text-xs tracking-[0.3em] text-navy uppercase">
-          We&apos;re Getting Married
+          How It&apos;s Going
         </p>
         <h2 className="mt-4 font-display text-3xl text-navy sm:text-4xl">
-          How It&apos;s Going
+          We&apos;re Getting Married
         </h2>
         <p className="mt-6 leading-[1.7] text-ink">
           and can&apos;t wait to celebrate this day surrounded by the people
