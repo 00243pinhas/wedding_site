@@ -36,7 +36,7 @@ export function Hero() {
             className="object-cover object-[center_20%]"
           />
         </motion.div>
-        <div className="absolute inset-0 bg-navy/42" />
+        <div className="absolute inset-0 bg-navy/46" />
       </div>
 
       <div className="relative z-10 mx-auto flex max-w-2xl flex-col items-center px-4 text-center sm:px-6">
@@ -47,16 +47,16 @@ export function Hero() {
         </Reveal>
 
         <Reveal delay={STAGGER_STEP} className="mt-6">
-          <h1 className="font-display text-6xl text-ivory sm:text-7xl">
-            Pam &amp; Jerry
+          <h1 className="font-display text-7xl text-ivory sm:text-8xl">
+            Jerry &amp; Pam
           </h1>
         </Reveal>
 
         <Reveal delay={STAGGER_STEP * 2} className="mt-6">
-          <p className="text-xs tracking-[0.3em] text-ivory uppercase">
+          <p className="text-sm tracking-[0.3em] text-ivory uppercase">
             Save The Date
           </p>
-          <p className="mt-2 text-sm tracking-[0.2em] text-ivory uppercase">
+          <p className="mt-2 text-base tracking-[0.2em] text-ivory uppercase">
             10 September
           </p>
         </Reveal>

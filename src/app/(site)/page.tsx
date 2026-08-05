@@ -14,7 +14,7 @@ export default function HomePage() {
     <>
       <Hero />
       <Countdown />
-      <Welcome />
+      <Welcome tightTop />
       <div className="mx-auto h-px w-10 bg-blue" />
       <LoveLetter />
       <Reveal className="bg-ivory pb-14 text-center md:pb-20">

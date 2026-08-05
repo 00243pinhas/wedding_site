@@ -13,7 +13,7 @@ export function PhotoMoment() {
           alt=""
           fill
           sizes="100vw"
-          className="object-cover object-[center_10%]"
+          className="object-cover object-[center_17%]"
         />
         <div className="absolute inset-0 bg-navy/42" />
       </div>

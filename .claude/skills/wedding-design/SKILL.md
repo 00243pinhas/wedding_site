@@ -46,7 +46,7 @@ Roughly **70% ivory / 20% blue+navy / 10% pink+blush**.
 ## The hero
 
 - Full-bleed photograph, `85vh` on mobile so the next section peeks and invites the scroll.
-- Navy overlay at ~42% opacity across the image. This guarantees white type is legible over any photo the client supplies.
+- Navy overlay at ~46% opacity across the image. This guarantees white type is legible over any photo the client supplies.
 - Stacked, centred: eyebrow line (`TOGETHER WITH THEIR FAMILIES`) → names in display serif → date and time in letterspaced small caps → RSVP.
 - RSVP is a **thin outlined ivory button**: `1px` ivory border, ivory text, transparent fill, wide letterspacing. On desktop hover, fill with ivory and flip text to navy over 0.4s.
 - Load sequence: eyebrow → names → date → button, staggered over ~1.5s total. Across the whole sequence the photograph scales 1.05 → 1.0. That slow scale is what makes it feel expensive — do not speed it up.
