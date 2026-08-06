@@ -11,9 +11,12 @@ export function RsvpInvite() {
         <h2 className="mt-4 font-display text-4xl text-navy sm:text-5xl">
           Will you celebrate with us?
         </h2>
-        <p className="mt-6 leading-[1.7] text-ink">
-          Kindly reply by 20 August.
-        </p>
+        <div className="mt-8 flex flex-col items-center">
+          <div className="h-px w-10 bg-blue" />
+          <p className="mt-4 inline-block border border-blue px-6 py-2 text-lg font-semibold text-navy">
+            Kindly reply by 20 August.
+          </p>
+        </div>
 
         <Link
           href="/rsvp"

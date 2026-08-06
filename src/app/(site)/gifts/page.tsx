@@ -24,8 +24,10 @@ const JERRY_ACCOUNT: { label: string; value: string }[] = [
 function AccountRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="py-3">
-      <p className="text-xs tracking-[0.3em] text-navy uppercase">{label}</p>
-      <p className="mt-1 leading-[1.7] text-ink select-all">{value}</p>
+      <p className="text-sm tracking-[0.3em] text-navy uppercase">{label}</p>
+      <p className="mt-1 text-lg leading-[1.7] text-ink select-all">
+        {value}
+      </p>
     </div>
   );
 }
@@ -46,7 +48,7 @@ export default function GiftsPage() {
       </Reveal>
 
       <Reveal className="mt-16 md:mt-20">
-        <p className="leading-[1.7] text-ink">{GIFT_INTRO}</p>
+        <p className="text-lg leading-[1.7] text-ink">{GIFT_INTRO}</p>
       </Reveal>
 
       <Reveal className="mt-12 border border-blue md:mt-16">

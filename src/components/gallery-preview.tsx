@@ -40,7 +40,7 @@ export function GalleryPreview() {
       <div className="bg-ivory py-10 text-center md:py-12">
         <Link
           href="/gallery"
-          className="border-b border-navy pb-0.5 text-xs tracking-[0.3em] text-navy uppercase"
+          className="inline-block border border-navy px-8 py-3 text-sm tracking-[0.2em] text-navy uppercase transition-colors duration-[400ms] md:hover:bg-navy md:hover:text-ivory"
         >
           View all photographs
         </Link>

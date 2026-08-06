@@ -27,18 +27,18 @@ export default function ContactPage() {
               <h2 className="font-display text-2xl text-navy sm:text-3xl">
                 {person.name}
               </h2>
-              <p className="mt-2 text-sm tracking-wide text-ink/70">
+              <p className="mt-2 text-base tracking-wide text-ink/70">
                 Day-of contact
               </p>
               <a
                 href={`mailto:${person.email}`}
-                className="mt-1 block text-ink hover:text-navy"
+                className="mt-1 block text-lg text-ink hover:text-navy"
               >
                 {person.email}
               </a>
               <a
                 href={`tel:${person.phone.replace(/\s+/g, "")}`}
-                className="mt-1 block text-ink hover:text-navy"
+                className="mt-1 block text-lg text-ink hover:text-navy"
               >
                 {person.phone}
               </a>

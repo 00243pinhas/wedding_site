@@ -10,11 +10,12 @@ const dellaRespira = Della_Respira({
   weight: ["400"],
 });
 
-// Body copy: serif, regular weight — nothing in the site relies on bold body text.
+// Body copy: serif, regular weight. 600 is loaded only for the RSVP
+// deadline line, which is the sole piece of body copy that needs emphasis.
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
   subsets: ["latin"],
-  weight: ["400"],
+  weight: ["400", "600"],
 });
 
 export const metadata: Metadata = {

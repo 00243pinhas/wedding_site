@@ -15,7 +15,7 @@ export function VenueMap({ venueName, address }: VenueMapProps) {
         <p className="font-display text-xl text-navy sm:text-2xl">
           {venueName}
         </p>
-        <p className="text-ink">{address}</p>
+        <p className="text-lg text-ink">{address}</p>
       </div>
       <div className="border-t border-blue p-6 sm:p-8">
         <a

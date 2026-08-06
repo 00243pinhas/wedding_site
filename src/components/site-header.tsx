@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 
 const NAV_LINKS = [
@@ -21,8 +22,15 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-blue bg-ivory/95 backdrop-blur">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <Link href="/" className="font-display text-xl text-navy">
-          Jerry &amp; Pam
+        <Link href="/" className="block">
+          <Image
+            src="/assets/jp-monogram-nav.png"
+            alt="Jerry & Pam"
+            width={400}
+            height={400}
+            priority
+            className="h-10 w-10 object-contain"
+          />
         </Link>
 
         <nav className="hidden md:block">

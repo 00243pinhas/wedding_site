@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Reveal } from "@/lib/motion/reveal";
@@ -9,10 +8,6 @@ import { useReducedMotion } from "@/lib/motion/use-reduced-motion";
 
 const HERO_IMAGE_SRC = "/assets/hero.jpg";
 
-// Stagger step between eyebrow → names → date → button. Four reveals at
-// this spacing (0, 1x, 2x, 3x) plus the 0.8s reveal duration land the
-// whole sequence at ~1.5s total.
-const STAGGER_STEP = 0.25;
 const IMAGE_SCALE_DURATION = 1.6;
 
 export function Hero() {
@@ -41,33 +36,12 @@ export function Hero() {
 
       <div className="relative z-10 mx-auto flex max-w-2xl flex-col items-center px-4 text-center sm:px-6">
         <Reveal>
-          <p className="text-xs tracking-[0.3em] text-ivory uppercase">
-            Together with their families
-          </p>
-        </Reveal>
-
-        <Reveal delay={STAGGER_STEP} className="mt-6">
-          <h1 className="font-display text-7xl text-ivory sm:text-8xl">
+          {/* Capped at text-7xl (not sm:text-8xl): at the site-wide 1.25x
+              type-scale bump, 8xl no longer fits "Jerry & Pam" on one
+              line in this max-w-2xl container at desktop widths. */}
+          <h1 className="font-display text-7xl text-ivory">
             Jerry &amp; Pam
           </h1>
-        </Reveal>
-
-        <Reveal delay={STAGGER_STEP * 2} className="mt-6">
-          <p className="text-sm tracking-[0.3em] text-ivory uppercase">
-            Save The Date
-          </p>
-          <p className="mt-2 text-base tracking-[0.2em] text-ivory uppercase">
-            10 September
-          </p>
-        </Reveal>
-
-        <Reveal delay={STAGGER_STEP * 3} className="mt-10">
-          <Link
-            href="/rsvp"
-            className="inline-block border border-ivory px-10 py-3 text-sm tracking-[0.2em] text-ivory uppercase transition-colors duration-[400ms] md:hover:bg-ivory md:hover:text-navy"
-          >
-            RSVP
-          </Link>
         </Reveal>
       </div>
     </section>

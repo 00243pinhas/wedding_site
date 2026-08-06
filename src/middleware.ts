@@ -55,8 +55,11 @@ export const config = {
   matcher: [
     /*
      * Run on everything except Next.js internals and static files, so
-     * the gate covers every guest-facing route by default.
+     * the gate covers every guest-facing route by default. icon.png is
+     * the App Router's generated favicon route (replacing favicon.ico) —
+     * browsers request it unconditionally, cookie or not, so it must
+     * stay reachable the same way favicon.ico always was.
      */
-    "/((?!_next/static|_next/image|favicon.ico).*)",
+    "/((?!_next/static|_next/image|favicon.ico|icon.png).*)",
   ],
 };

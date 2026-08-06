@@ -42,6 +42,32 @@
 }
 
 /*
+ * Type scale — every --text-* size below is Tailwind's default value
+ * multiplied by 1.25 (client feedback: site-wide text read too small).
+ * Overriding the scale here (rather than editing every text-* usage)
+ * means every text-xs..text-8xl utility across the whole site grows by
+ * the same proportion, so heading/body hierarchy stays intact. The
+ * line-height companions are left alone on purpose: Tailwind defines
+ * them as unitless ratios (e.g. calc(1.5 / 1)), so they already scale
+ * with font-size automatically — redeclaring them would just repeat
+ * the same numbers.
+ */
+@theme {
+  --text-xs: 0.9375rem;
+  --text-sm: 1.09375rem;
+  --text-base: 1.25rem;
+  --text-lg: 1.40625rem;
+  --text-xl: 1.5625rem;
+  --text-2xl: 1.875rem;
+  --text-3xl: 2.34375rem;
+  --text-4xl: 2.8125rem;
+  --text-5xl: 3.75rem;
+  --text-6xl: 4.6875rem;
+  --text-7xl: 5.625rem;
+  --text-8xl: 7.5rem;
+}
+
+/*
  * These base element rules must live inside Tailwind's `base` layer.
  * Cascade layers ignore specificity across layers — any unlayered rule
  * beats every layered rule (including utilities), regardless of

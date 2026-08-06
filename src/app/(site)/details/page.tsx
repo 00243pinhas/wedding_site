@@ -15,8 +15,8 @@ const VENUE_ADDRESS =
 
 const RECEPTION_COPY = "The reception follows immediately at the same venue.";
 
-const DRESS_CODE_MEN =
-  "Tuxedo or dark, formal suit with a white dress shirt. Lean into darker colours — black, navy, charcoal — and deeper jewel tones like emerald and burgundy.";
+const DRESS_CODE_MEN = `Formal suit and Black Tie Optional.
+Lean into darker colours and deeper tones.`;
 const DRESS_CODE_WOMEN =
   "Evening gown, full-length, or formal midi-length dresses.";
 const DRESS_CODE_NOTE =
@@ -49,7 +49,7 @@ export default function DetailsPage() {
           <h2 className="font-display text-2xl text-navy sm:text-3xl">
             Ceremony
           </h2>
-          <div className="mt-4 space-y-1 text-ink">
+          <div className="mt-4 space-y-1 text-lg text-ink">
             <p>{CEREMONY_COPY}</p>
             <p>{VENUE_NAME}</p>
             <p>{VENUE_ADDRESS}</p>
@@ -60,7 +60,7 @@ export default function DetailsPage() {
           <h2 className="font-display text-2xl text-navy sm:text-3xl">
             Reception
           </h2>
-          <div className="mt-4 space-y-1 text-ink">
+          <div className="mt-4 space-y-1 text-lg text-ink">
             <p>{RECEPTION_COPY}</p>
             <p>{VENUE_NAME}</p>
             <p>{VENUE_ADDRESS}</p>
@@ -78,13 +78,13 @@ export default function DetailsPage() {
               key={item.title}
               className="grid grid-cols-[32px_1fr] gap-6 py-4"
             >
-              <span className="text-sm tracking-wide text-navy">
+              <span className="text-base tracking-wide text-navy">
                 {String(index + 1).padStart(2, "0")}
               </span>
               <span>
-                <span className="text-ink">{item.title}</span>
+                <span className="text-lg text-ink">{item.title}</span>
                 {item.description && (
-                  <span className="mt-1 block text-sm text-ink/70">
+                  <span className="mt-1 block text-base text-ink/70">
                     {item.description}
                   </span>
                 )}
@@ -120,28 +120,32 @@ export default function DetailsPage() {
 
         <div className="relative flex min-h-[560px] items-center justify-center px-4 py-16 sm:px-6 md:min-h-[640px] md:py-20">
           <div className="w-full max-w-xl bg-ivory/90 px-8 py-10 text-center sm:px-12 sm:py-14">
-            <p className="text-xs tracking-[0.3em] text-navy uppercase">
+            <p className="text-sm tracking-[0.3em] text-navy uppercase">
               Dress Code
             </p>
             <div className="mx-auto mt-4 h-px w-10 bg-blue" />
 
             <div className="mt-8">
-              <p className="text-xs tracking-[0.3em] text-navy uppercase">
+              <p className="text-sm tracking-[0.3em] text-navy uppercase">
                 Men
               </p>
-              <p className="mt-2 leading-[1.7] text-ink">{DRESS_CODE_MEN}</p>
+              <p className="mt-2 whitespace-pre-line text-lg leading-[1.7] text-ink">
+                {DRESS_CODE_MEN}
+              </p>
             </div>
 
             <div className="mx-auto mt-6 h-px w-10 bg-blue" />
 
             <div className="mt-6">
-              <p className="text-xs tracking-[0.3em] text-navy uppercase">
+              <p className="text-sm tracking-[0.3em] text-navy uppercase">
                 Women
               </p>
-              <p className="mt-2 leading-[1.7] text-ink">
+              <p className="mt-2 text-lg leading-[1.7] text-ink">
                 {DRESS_CODE_WOMEN}
               </p>
-              <p className="mt-2 leading-[1.7] text-ink">{DRESS_CODE_NOTE}</p>
+              <p className="mt-2 text-lg leading-[1.7] text-ink">
+                {DRESS_CODE_NOTE}
+              </p>
             </div>
           </div>
         </div>
