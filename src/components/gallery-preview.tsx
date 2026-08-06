@@ -7,7 +7,7 @@ const GALLERY_IMAGES: { src: string; alt: string }[] = [
   { src: "/assets/gallery-preview-1.jpg", alt: "" },
   { src: "/assets/gallery-preview-2.jpg", alt: "" },
   { src: "/assets/gallery-preview-3.jpg", alt: "" },
-  { src: "/assets/gallery-preview-4.jpeg", alt: "" },
+  { src: "/assets/gallery-preview-4.jpg", alt: "" },
 ];
 
 export function GalleryPreview() {

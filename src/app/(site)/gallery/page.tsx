@@ -9,10 +9,10 @@ const GALLERY_PHOTOS: { src: string; alt: string }[] = [
   { src: "/assets/gallery-02.jpeg", alt: "" },
   { src: "/assets/gallery-03.jpg", alt: "" },
   { src: "/assets/gallery-04.jpeg", alt: "" },
-  { src: "/assets/gallery-05.jpg", alt: "" },
-  { src: "/assets/gallery-06.jpg", alt: "" },
-  { src: "/assets/gallery-07.jpeg", alt: "" },
-  { src: "/assets/gallery-08.jpeg", alt: "" },
+  { src: "/assets/gallery-05.jpeg", alt: "" },
+  { src: "/assets/gallery-06.jpeg", alt: "" },
+  { src: "/assets/gallery-07.jpg", alt: "" },
+  { src: "/assets/gallery-08.jpg", alt: "" },
   { src: "/assets/gallery-09.jpg", alt: "" },
 ];
 
@@ -25,7 +25,13 @@ export default function GalleryPage() {
         {GALLERY_PHOTOS.map((photo, index) => (
           <div
             key={index}
-            className="relative aspect-[4/5] w-full overflow-hidden"
+            className={`relative aspect-[4/5] w-full overflow-hidden ${
+              // 9 photos in a 2-col mobile grid leaves an orphan on its own
+              // row (2-2-2-2-1). Drop the last one on mobile only so it
+              // groups cleanly as 2-2-2-2; the 3-col desktop grid fits all
+              // 9 evenly and shows it.
+              index === GALLERY_PHOTOS.length - 1 ? "hidden md:block" : ""
+            }`}
           >
             <Image
               src={photo.src}

@@ -1,5 +1,5 @@
-import { HowItStartedPam } from "@/components/how-it-started-pam";
 import { HowItStartedJerry } from "@/components/how-it-started-jerry";
+import { HowItStartedPam } from "@/components/how-it-started-pam";
 import { Welcome } from "@/components/welcome";
 import { LoveLetter } from "@/components/love-letter";
 import { Reveal } from "@/lib/motion/reveal";
@@ -7,7 +7,7 @@ import { Reveal } from "@/lib/motion/reveal";
 export default function StoryPage() {
   return (
     <>
-      <section className="bg-ivory pt-20 pb-0 md:pt-[120px]">
+      <section className="bg-ivory pt-20 pb-14 md:pt-[120px] md:pb-20">
         <Reveal className="mx-auto max-w-2xl px-4 text-center sm:px-6">
           <h1 className="font-display text-5xl text-navy sm:text-6xl">
             How It Started
@@ -18,8 +18,8 @@ export default function StoryPage() {
         </Reveal>
       </section>
 
-      <HowItStartedPam />
       <HowItStartedJerry />
+      <HowItStartedPam />
       <Welcome />
       <div className="mx-auto h-px w-10 bg-blue" />
       <LoveLetter />
