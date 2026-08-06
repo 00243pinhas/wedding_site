@@ -4,7 +4,7 @@ import { checkRateLimit } from "@/lib/rate-limit";
 
 export type VerifyInviteCodeResult =
   | { ok: true; owner: true }
-  | { ok: true; owner: false; guestId: string }
+  | { ok: true; owner: false; familyId: string }
   | { ok: false; reason: "rate_limited" | "not_found" };
 
 // Shared by the /i/[code] link and the welcome-gate code form — both doors
@@ -23,23 +23,23 @@ export async function verifyInviteCode(
   }
 
   const supabase = createAdminClient();
-  const { data: guest } = await supabase
-    .from("guests")
+  const { data: family } = await supabase
+    .from("families")
     .select("id")
     .eq("invite_code", code)
     .maybeSingle();
 
-  if (!guest) {
+  if (!family) {
     return { ok: false, reason: "not_found" };
   }
 
-  return { ok: true, owner: false, guestId: guest.id };
+  return { ok: true, owner: false, familyId: family.id };
 }
 
 // Owner bypass for the couple and the developer to view the live site —
-// never looked up against or written to `guests`, so owners can't show up
-// in the guest list, admin dashboard, CSV, or headcount. Checked before the
-// database lookup so an owner entry never touches `guests` at all.
+// never looked up against or written to `families`, so owners can't show
+// up in the guest list, admin dashboard, CSV, or headcount. Checked before
+// the database lookup so an owner entry never touches `families` at all.
 //
 // SHA-256 both sides first so timingSafeEqual always compares equal-length
 // digests: a raw length check on the submitted code would leak length via

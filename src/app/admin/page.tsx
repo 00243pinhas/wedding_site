@@ -19,9 +19,13 @@ export default async function AdminPage() {
     return <AdminSignIn />;
   }
 
-  const { guests, summary } = await getAdminDashboardData(supabase);
+  const { families, summary } = await getAdminDashboardData(supabase);
 
   return (
-    <AdminDashboard email={user.email ?? ""} guests={guests} summary={summary} />
+    <AdminDashboard
+      email={user.email ?? ""}
+      families={families}
+      summary={summary}
+    />
   );
 }

@@ -44,3 +44,5 @@ next-env.d.ts
 # guest data — private, never committed
 /guests_import.csv
 /guest_invite_links.csv
+/families.csv
+/families_invite_links.csv

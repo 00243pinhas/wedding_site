@@ -1,80 +1,96 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/supabase/types";
 
-type GuestRow = Database["public"]["Tables"]["guests"]["Row"];
-type RsvpRow = Database["public"]["Tables"]["rsvps"]["Row"];
+type MemberRow = Database["public"]["Tables"]["members"]["Row"];
 
-export interface AdminGuestRow {
+export interface AdminMemberRow {
   id: string;
   fullName: string;
+  attending: boolean | null;
+  respondedAt: string | null;
+}
+
+export interface AdminFamilyRow {
+  id: string;
+  familyName: string;
   inviteCode: string;
-  maxPartySize: number;
-  status: GuestRow["rsvp_status"];
-  confirmedPartySize: number | null;
   dietaryNotes: string | null;
   message: string | null;
-  respondedAt: string | null;
-  responseCount: number;
+  members: AdminMemberRow[];
+  totalMembers: number;
+  attendingCount: number;
+  respondedCount: number;
 }
 
 export interface AdminSummary {
-  totalGuests: number;
-  respondedCount: number;
-  totalAttendingHeadcount: number;
-  declinedCount: number;
+  totalFamilies: number;
+  totalMembers: number;
+  totalAttending: number;
+  totalResponded: number;
+  totalDeclined: number;
 }
 
-// RLS scopes both selects to the admin emails in the `authenticated` policy
-// (see supabase/migrations/20260720120000_create_guests_and_rsvps.sql). A
-// signed-in non-admin gets empty arrays back, not an error — that's the
-// correct "sees nothing" behavior, not a bug in this function.
+// RLS scopes both selects to the admin emails in the `authenticated`
+// policies (see supabase/migrations/20260806120000_create_families_and_members.sql).
+// A signed-in non-admin gets empty arrays back, not an error — that's the
+// correct "sees nothing" behavior, not a bug in this function. The
+// headcount that matters to the caterer counts MEMBERS (individuals), not
+// families — a family of 4 with 3 attending contributes 3, not 1.
 export async function getAdminDashboardData(
   supabase: SupabaseClient<Database>,
-): Promise<{ guests: AdminGuestRow[]; summary: AdminSummary }> {
-  const [{ data: guests }, { data: rsvps }] = await Promise.all([
-    supabase.from("guests").select("*").order("full_name", { ascending: true }),
-    supabase.from("rsvps").select("*").order("created_at", { ascending: false }),
+): Promise<{ families: AdminFamilyRow[]; summary: AdminSummary }> {
+  const [{ data: families }, { data: members }] = await Promise.all([
+    supabase
+      .from("families")
+      .select("*")
+      .order("family_name", { ascending: true }),
+    supabase
+      .from("members")
+      .select("*")
+      .order("created_at", { ascending: true }),
   ]);
 
-  const rsvpsByGuest = new Map<string, RsvpRow[]>();
-  for (const rsvp of rsvps ?? []) {
-    const list = rsvpsByGuest.get(rsvp.guest_id);
+  const membersByFamily = new Map<string, MemberRow[]>();
+  for (const member of members ?? []) {
+    const list = membersByFamily.get(member.family_id);
     if (list) {
-      list.push(rsvp);
+      list.push(member);
     } else {
-      rsvpsByGuest.set(rsvp.guest_id, [rsvp]);
+      membersByFamily.set(member.family_id, [member]);
     }
   }
 
-  const rows: AdminGuestRow[] = (guests ?? []).map((guest) => {
-    // rsvps is ordered created_at desc, so index 0 is the latest response —
-    // a guest who changed their answer still surfaces only the current one.
-    const guestRsvps = rsvpsByGuest.get(guest.id) ?? [];
-    const latest = guestRsvps[0] ?? null;
+  const familyRows: AdminFamilyRow[] = (families ?? []).map((family) => {
+    const familyMembers = membersByFamily.get(family.id) ?? [];
 
     return {
-      id: guest.id,
-      fullName: guest.full_name,
-      inviteCode: guest.invite_code,
-      maxPartySize: guest.max_party_size,
-      status: guest.rsvp_status,
-      confirmedPartySize:
-        guest.rsvp_status === "pending" ? null : (latest?.party_size ?? null),
-      dietaryNotes: latest?.dietary_notes ?? null,
-      message: latest?.message ?? null,
-      respondedAt: guest.responded_at,
-      responseCount: guestRsvps.length,
+      id: family.id,
+      familyName: family.family_name,
+      inviteCode: family.invite_code,
+      dietaryNotes: family.dietary_notes,
+      message: family.message,
+      members: familyMembers.map((m) => ({
+        id: m.id,
+        fullName: m.full_name,
+        attending: m.attending,
+        respondedAt: m.responded_at,
+      })),
+      totalMembers: familyMembers.length,
+      attendingCount: familyMembers.filter((m) => m.attending === true)
+        .length,
+      respondedCount: familyMembers.filter((m) => m.attending !== null)
+        .length,
     };
   });
 
+  const allMembers = members ?? [];
   const summary: AdminSummary = {
-    totalGuests: rows.length,
-    respondedCount: rows.filter((r) => r.status !== "pending").length,
-    totalAttendingHeadcount: rows
-      .filter((r) => r.status === "attending")
-      .reduce((sum, r) => sum + (r.confirmedPartySize ?? 0), 0),
-    declinedCount: rows.filter((r) => r.status === "declined").length,
+    totalFamilies: familyRows.length,
+    totalMembers: allMembers.length,
+    totalAttending: allMembers.filter((m) => m.attending === true).length,
+    totalResponded: allMembers.filter((m) => m.attending !== null).length,
+    totalDeclined: allMembers.filter((m) => m.attending === false).length,
   };
 
-  return { guests: rows, summary };
+  return { families: familyRows, summary };
 }

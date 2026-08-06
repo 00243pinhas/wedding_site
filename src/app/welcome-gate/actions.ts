@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { verifyInviteCode, getClientIp } from "@/lib/auth/invite-code";
 import {
-  setGuestSessionCookieForAction,
+  setFamilySessionCookieForAction,
   setOwnerSessionCookieForAction,
 } from "@/lib/auth/guest-session";
 
@@ -34,7 +34,7 @@ export async function submitInviteCode(
   if (result.owner) {
     await setOwnerSessionCookieForAction();
   } else {
-    await setGuestSessionCookieForAction(result.guestId);
+    await setFamilySessionCookieForAction(result.familyId);
   }
   redirect("/");
 }

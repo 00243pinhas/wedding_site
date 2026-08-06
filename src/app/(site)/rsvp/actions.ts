@@ -3,9 +3,13 @@
 import { getGuestSessionFromCookie } from "@/lib/auth/guest-session";
 import { createAdminClient } from "@/lib/supabase/admin";
 
-export interface RsvpInput {
+export interface MemberResponseInput {
+  memberId: string;
   attending: boolean;
-  partySize: number;
+}
+
+export interface RsvpInput {
+  responses: MemberResponseInput[];
   dietaryNotes: string;
   message: string;
 }
@@ -13,16 +17,16 @@ export interface RsvpInput {
 export interface RsvpResult {
   ok: boolean;
   error?: string;
-  attending?: boolean;
 }
 
-// guest_id always comes from the signed guest_session cookie, never from
-// the form — a client-supplied id would let one guest submit an RSVP as
+// family_id always comes from the signed guest_session cookie, never from
+// the form — a client-supplied id would let one family submit an RSVP as
 // another. This runs with the service-role client, which bypasses RLS, so
-// the max_party_size check below is the only guard before the DB trigger.
+// the "does this member belong to this family" check below is the only
+// guard before the write.
 //
 // An owner session (see invite-code.ts's OWNER_ACCESS_CODE bypass) has no
-// guest_id and no guests row to attach an RSVP to — reject it here too,
+// family_id and no families row to attach an RSVP to — reject it here too,
 // not just in the page UI, since a Server Action is a public endpoint an
 // owner's browser could call directly regardless of what the page renders.
 export async function submitRsvp(input: RsvpInput): Promise<RsvpResult> {
@@ -36,17 +40,16 @@ export async function submitRsvp(input: RsvpInput): Promise<RsvpResult> {
           : "We couldn't verify your invitation. Please open the RSVP link from your personal invitation and try again.",
     };
   }
-  const guestId = session.guestId;
+  const familyId = session.familyId;
 
   const supabase = createAdminClient();
 
-  const { data: guest } = await supabase
-    .from("guests")
-    .select("max_party_size")
-    .eq("id", guestId)
-    .maybeSingle();
+  const { data: members } = await supabase
+    .from("members")
+    .select("id")
+    .eq("family_id", familyId);
 
-  if (!guest) {
+  if (!members || members.length === 0) {
     return {
       ok: false,
       error:
@@ -54,37 +57,51 @@ export async function submitRsvp(input: RsvpInput): Promise<RsvpResult> {
     };
   }
 
-  const partySize = input.attending ? Math.trunc(input.partySize) : 0;
+  // Whoever opens the code answers for the whole family, and every member
+  // gets a definite status — a member missing from input.responses (e.g. a
+  // checkbox that was never touched) is treated as not attending, not left
+  // unanswered.
+  const validIds = new Set(members.map((m) => m.id));
+  const responseByMember = new Map(
+    input.responses
+      .filter((r) => validIds.has(r.memberId))
+      .map((r) => [r.memberId, r.attending]),
+  );
+  const respondedAt = new Date().toISOString();
 
-  if (input.attending && (partySize < 1 || partySize > guest.max_party_size)) {
-    return {
-      ok: false,
-      error: `Please choose a party size between 1 and ${guest.max_party_size}.`,
-    };
-  }
+  const updateResults = await Promise.all(
+    Array.from(validIds).map((id) =>
+      supabase
+        .from("members")
+        .update({
+          attending: responseByMember.get(id) ?? false,
+          responded_at: respondedAt,
+        })
+        .eq("id", id),
+    ),
+  );
 
-  const { error } = await supabase.from("rsvps").insert({
-    guest_id: guestId,
-    attending: input.attending,
-    party_size: partySize,
-    dietary_notes: input.attending ? input.dietaryNotes.trim() || null : null,
-    message: input.message.trim() || null,
-  });
-
-  if (error) {
+  if (updateResults.some((r) => r.error)) {
     return {
       ok: false,
       error: "Something went wrong submitting your RSVP. Please try again.",
     };
   }
 
-  await supabase
-    .from("guests")
+  const { error: familyError } = await supabase
+    .from("families")
     .update({
-      rsvp_status: input.attending ? "attending" : "declined",
-      responded_at: new Date().toISOString(),
+      dietary_notes: input.dietaryNotes.trim() || null,
+      message: input.message.trim() || null,
     })
-    .eq("id", guestId);
+    .eq("id", familyId);
 
-  return { ok: true, attending: input.attending };
+  if (familyError) {
+    return {
+      ok: false,
+      error: "Something went wrong submitting your RSVP. Please try again.",
+    };
+  }
+
+  return { ok: true };
 }

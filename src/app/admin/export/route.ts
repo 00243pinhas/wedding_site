@@ -2,17 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getAdminDashboardData } from "@/lib/admin/dashboard-data";
 
-const HEADER = [
-  "Full name",
-  "Invite code",
-  "Allocated party size",
-  "Status",
-  "Confirmed party size",
-  "Dietary notes",
-  "Message",
-  "Responded at",
-  "Responded more than once",
-];
+const HEADER = ["Family name", "Member name", "Attending", "Responded at"];
 
 function csvField(value: string): string {
   if (/[",\n]/.test(value)) {
@@ -25,9 +15,16 @@ function csvRow(values: string[]): string {
   return values.map(csvField).join(",");
 }
 
+function attendingLabel(attending: boolean | null): string {
+  if (attending === true) return "Attending";
+  if (attending === false) return "Not attending";
+  return "No response";
+}
+
 // Same authenticated + RLS-scoped read as /admin itself (never the
 // service-role client) — this route is reachable directly, not only via
 // the dashboard's download link, so it re-checks auth on its own.
+// One row per MEMBER (not per family) — this is the caterer's list.
 export async function GET() {
   const supabase = await createClient();
   const {
@@ -38,27 +35,26 @@ export async function GET() {
     return NextResponse.json({ error: "Not signed in" }, { status: 401 });
   }
 
-  const { guests, summary } = await getAdminDashboardData(supabase);
+  const { families, summary } = await getAdminDashboardData(supabase);
 
   const lines = [csvRow(HEADER)];
-  for (const guest of guests) {
-    lines.push(
-      csvRow([
-        guest.fullName,
-        guest.inviteCode,
-        String(guest.maxPartySize),
-        guest.status,
-        guest.confirmedPartySize === null ? "" : String(guest.confirmedPartySize),
-        guest.dietaryNotes ?? "",
-        guest.message ?? "",
-        guest.respondedAt ?? "",
-        guest.responseCount > 1 ? "yes" : "",
-      ]),
-    );
+  for (const family of families) {
+    for (const member of family.members) {
+      lines.push(
+        csvRow([
+          family.familyName,
+          member.fullName,
+          attendingLabel(member.attending),
+          member.respondedAt ?? "",
+        ]),
+      );
+    }
   }
 
   lines.push("");
-  lines.push(csvRow(["Total attending headcount", String(summary.totalAttendingHeadcount)]));
+  lines.push(
+    csvRow(["Total attending headcount", String(summary.totalAttending)]),
+  );
 
   return new NextResponse(lines.join("\n"), {
     headers: {

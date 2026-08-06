@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
-  setGuestSessionCookie,
+  setFamilySessionCookie,
   setOwnerSessionCookie,
 } from "@/lib/auth/guest-session";
 import { verifyInviteCode, getClientIp } from "@/lib/auth/invite-code";
@@ -31,7 +31,7 @@ export async function GET(
   if (result.owner) {
     setOwnerSessionCookie(response);
   } else {
-    setGuestSessionCookie(response, result.guestId);
+    setFamilySessionCookie(response, result.familyId);
   }
   return response;
 }

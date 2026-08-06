@@ -8,12 +8,13 @@ import type { NextResponse } from "next/server";
 export const COOKIE_NAME = "guest_session";
 const MAX_AGE_SECONDS = 60 * 60 * 24 * 90; // 90 days — outlives the wedding
 
-// A session is either a real guest (has a guests.id an RSVP can attach to)
-// or an owner (Jerry, Pam, the developer) previewing the live site. Owner
-// sessions never carry a guest_id — they must never appear in the guest
-// list, admin dashboard, CSV export, or headcount.
+// A session is either a family (has a families.id the RSVP checklist
+// attaches to — one code covers every member of that family) or an owner
+// (Jerry, Pam, the developer) previewing the live site. Owner sessions
+// never carry a family_id — they must never appear in the guest list,
+// admin dashboard, CSV export, or headcount.
 export type GuestSession =
-  | { type: "guest"; guestId: string }
+  | { type: "family"; familyId: string }
   | { type: "owner" };
 
 function getSecret(): string {
@@ -63,8 +64,8 @@ export function verifySessionPayload(value: string): string | null {
 function parseSessionPayload(payload: string | null): GuestSession | null {
   if (!payload) return null;
   if (payload === "owner") return { type: "owner" };
-  if (payload.startsWith("guest:")) {
-    return { type: "guest", guestId: payload.slice("guest:".length) };
+  if (payload.startsWith("family:")) {
+    return { type: "family", familyId: payload.slice("family:".length) };
   }
   return null;
 }
@@ -80,31 +81,31 @@ function cookieOptions() {
 }
 
 // Call from the route handler that just verified an invite code.
-export function setGuestSessionCookie(
+export function setFamilySessionCookie(
   response: NextResponse,
-  guestId: string,
+  familyId: string,
 ): void {
-  response.cookies.set(COOKIE_NAME, sign(`guest:${guestId}`), cookieOptions());
+  response.cookies.set(COOKIE_NAME, sign(`family:${familyId}`), cookieOptions());
 }
 
 // Call from the Server Action that just verified an invite code — same
-// signing and options as setGuestSessionCookie, but through next/headers'
+// signing and options as setFamilySessionCookie, but through next/headers'
 // cookies() since a Server Action has no NextResponse to attach to.
-export async function setGuestSessionCookieForAction(
-  guestId: string,
+export async function setFamilySessionCookieForAction(
+  familyId: string,
 ): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.set(COOKIE_NAME, sign(`guest:${guestId}`), cookieOptions());
+  cookieStore.set(COOKIE_NAME, sign(`family:${familyId}`), cookieOptions());
 }
 
 // Owner entry (see invite-code.ts's OWNER_ACCESS_CODE bypass) never touches
-// `guests` — there's no guest_id to sign, just the "owner" marker.
+// `families` — there's no family_id to sign, just the "owner" marker.
 export function setOwnerSessionCookie(response: NextResponse): void {
   response.cookies.set(COOKIE_NAME, sign("owner"), cookieOptions());
 }
 
 // Server Action equivalent of setOwnerSessionCookie — same relationship as
-// setGuestSessionCookieForAction is to setGuestSessionCookie.
+// setFamilySessionCookieForAction is to setFamilySessionCookie.
 export async function setOwnerSessionCookieForAction(): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.set(COOKIE_NAME, sign("owner"), cookieOptions());
