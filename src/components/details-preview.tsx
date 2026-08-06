@@ -13,7 +13,7 @@ const CARDS = [
   },
   {
     heading: "Dress Code",
-    body: "Formal evening attire — see full details for guidance.",
+    body: "Black Tie Optional — formal suit for men, evening or formal midi-length dresses for women. See details for full guidance.",
   },
 ];
 

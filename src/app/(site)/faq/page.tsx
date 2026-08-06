@@ -27,7 +27,7 @@ const FAQ_ITEMS: { question: string; answer: string }[] = [
   {
     question: "What should I wear?",
     answer:
-      "Formal evening attire — see the Details page. As the ceremony is outdoors on grass, choose footwear accordingly.",
+      "Black Tie Optional. Men: formal suit, leaning into darker colours and deeper tones. Women: evening gown, full-length, or formal midi-length dresses. The ceremony is outdoors on grass, so choose footwear accordingly.",
   },
 ];
 
