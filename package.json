@@ -14,7 +14,8 @@
     "verify:rls": "node --env-file=.env.local supabase/verify.mjs",
     "seed:families": "node --env-file=.env.local supabase/seed-families.mjs",
     "verify:families": "node --env-file=.env.local supabase/verify-families.mjs",
-    "import:families": "node --env-file=.env.local supabase/import-families.mjs"
+    "import:families": "node --env-file=.env.local supabase/import-families.mjs",
+    "reset:rsvps": "node --env-file=.env.local supabase/reset-rsvps.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.3",
