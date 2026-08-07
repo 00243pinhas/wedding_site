@@ -30,8 +30,21 @@ import { COOKIE_NAME, verifySessionPayload } from "@/lib/auth/guest-session";
 //   - Next.js internals / static files, handled by the matcher below.
 const EXCLUDED_PREFIXES = ["/i/", "/admin", "/welcome-gate", "/contact", "/assets/"];
 
+const CANONICAL_HOST = "jerryandpamwedding.com";
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Canonical-domain redirect. The site is reachable on both the custom
+  // domain and the default *.vercel.app host Vercel always assigns —
+  // bounce the latter to the former so the address bar never shows it.
+  // Scoped to the ".vercel.app" suffix specifically so the custom domain
+  // itself can never match and loop.
+  const host = request.headers.get("host") ?? request.nextUrl.hostname;
+  if (host.endsWith(".vercel.app")) {
+    const canonicalUrl = new URL(request.nextUrl.pathname + request.nextUrl.search, `https://${CANONICAL_HOST}`);
+    return NextResponse.redirect(canonicalUrl, 308);
+  }
 
   if (EXCLUDED_PREFIXES.some((prefix) => pathname.startsWith(prefix))) {
     return NextResponse.next();
