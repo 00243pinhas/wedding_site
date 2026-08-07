@@ -6,6 +6,7 @@ const LOVE_LETTER_IMAGE_SRC = "/assets/love-letter.jpg";
 const PAM_LETTER = [
   "I look forward to becoming your wife, your covenant partner and every day of our adventurous life together.",
   "In you I have found a love that honours, that supports me so faithfully, that is sacrificial and looks beyond imperfections.",
+  "You are all I have prayed for, and I will never grow tired of telling you that you are God's best gift to me.",
 ];
 
 const JERRY_LETTER = [
