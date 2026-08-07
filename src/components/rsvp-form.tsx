@@ -28,8 +28,11 @@ export function RsvpForm({
 }: RsvpFormProps) {
   const alreadyResponded = members.some((m) => m.attending !== null);
 
-  const [attendance, setAttendance] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(members.map((m) => [m.id, m.attending === true])),
+  // Three states, matching members.attending exactly: true (coming), false
+  // (not coming), null (no response yet — the default until the guest
+  // actively picks one of the two buttons).
+  const [attendance, setAttendance] = useState<Record<string, boolean | null>>(
+    () => Object.fromEntries(members.map((m) => [m.id, m.attending])),
   );
   const [dietaryNotes, setDietaryNotes] = useState(initialDietaryNotes);
   const [message, setMessage] = useState(initialMessage);
@@ -37,8 +40,11 @@ export function RsvpForm({
   const [submitted, setSubmitted] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  function toggle(id: string) {
-    setAttendance((prev) => ({ ...prev, [id]: !prev[id] }));
+  // Clicking the already-selected button again clears it back to "no
+  // response yet" — an escape hatch for a misclick, rather than forcing a
+  // choice between only the two options once either has been touched.
+  function choose(id: string, value: boolean) {
+    setAttendance((prev) => ({ ...prev, [id]: prev[id] === value ? null : value }));
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -49,7 +55,7 @@ export function RsvpForm({
       const res = await submitRsvp({
         responses: members.map((m) => ({
           memberId: m.id,
-          attending: attendance[m.id] ?? false,
+          attending: attendance[m.id] ?? null,
         })),
         dietaryNotes,
         message,
@@ -64,7 +70,8 @@ export function RsvpForm({
   }
 
   if (submitted) {
-    const attendingCount = members.filter((m) => attendance[m.id]).length;
+    const attendingCount = members.filter((m) => attendance[m.id] === true)
+      .length;
     return (
       <Reveal className="mt-12 md:mt-16">
         <p className="font-display text-3xl text-navy sm:text-4xl">
@@ -103,25 +110,45 @@ export function RsvpForm({
             Who&rsquo;s coming?
           </legend>
           <div className="mt-4 space-y-3">
-            {members.map((member) => (
-              <label
-                key={member.id}
-                className="flex items-center justify-between gap-4 border border-blue bg-ivory px-4 py-4 md:hover:border-navy"
-              >
-                <span className="text-base text-ink">
-                  {member.full_name}
-                </span>
-                <span className="flex items-center gap-3 text-xs tracking-[0.15em] text-navy uppercase">
-                  Attending
-                  <input
-                    type="checkbox"
-                    checked={attendance[member.id] ?? false}
-                    onChange={() => toggle(member.id)}
-                    className="h-5 w-5 shrink-0 accent-navy"
-                  />
-                </span>
-              </label>
-            ))}
+            {members.map((member) => {
+              const choice = attendance[member.id] ?? null;
+              return (
+                <div
+                  key={member.id}
+                  className="border border-blue bg-ivory px-4 py-4"
+                >
+                  <span className="text-base text-ink">
+                    {member.full_name}
+                  </span>
+                  <div className="mt-3 grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      aria-pressed={choice === true}
+                      onClick={() => choose(member.id, true)}
+                      className={`flex min-h-[52px] items-center justify-center px-2 py-3 text-center text-xs leading-tight tracking-[0.1em] uppercase transition-colors duration-[400ms] border ${
+                        choice === true
+                          ? "border-blush bg-blush text-navy"
+                          : "border-blue bg-ivory text-navy md:hover:border-navy"
+                      }`}
+                    >
+                      I&rsquo;m Coming
+                    </button>
+                    <button
+                      type="button"
+                      aria-pressed={choice === false}
+                      onClick={() => choose(member.id, false)}
+                      className={`flex min-h-[52px] items-center justify-center px-2 py-3 text-center text-xs leading-tight tracking-[0.1em] uppercase transition-colors duration-[400ms] border ${
+                        choice === false
+                          ? "border-navy bg-navy/10 text-navy"
+                          : "border-blue bg-ivory text-navy md:hover:border-navy"
+                      }`}
+                    >
+                      I&rsquo;m Not Coming
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </fieldset>
 

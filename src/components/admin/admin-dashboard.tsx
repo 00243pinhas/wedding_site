@@ -61,21 +61,18 @@ export function AdminDashboard({
         </div>
         <div className="bg-ivory px-6 py-5">
           <p className="text-xs tracking-[0.2em] text-navy uppercase">
-            Responded
+            Not Coming
           </p>
           <p className="mt-2 font-display text-4xl text-navy">
-            {summary.totalResponded}{" "}
-            <span className="text-lg text-ink/50">
-              of {summary.totalMembers}
-            </span>
+            {summary.totalNotComing}
           </p>
         </div>
         <div className="bg-ivory px-6 py-5">
           <p className="text-xs tracking-[0.2em] text-navy uppercase">
-            Declined
+            No Response Yet
           </p>
           <p className="mt-2 font-display text-4xl text-navy">
-            {summary.totalDeclined}
+            {summary.totalNoResponse}
           </p>
         </div>
         <div className="bg-ivory px-6 py-5">
@@ -108,7 +105,7 @@ export function AdminDashboard({
               <th className={th} aria-hidden="true"></th>
               <th className={th}>Family</th>
               <th className={th}>Invite code</th>
-              <th className={th}>Attending</th>
+              <th className={th}>RSVP</th>
             </tr>
           </thead>
           <tbody>
@@ -161,7 +158,8 @@ function FamilyRows({
           {family.inviteCode}
         </td>
         <td className="px-4 py-3 align-top text-ink/80">
-          {family.attendingCount} of {family.totalMembers} attending
+          {family.attendingCount} coming, {family.notComingCount} not coming,{" "}
+          {family.noResponseCount} no response
         </td>
       </tr>
       {isOpen && (

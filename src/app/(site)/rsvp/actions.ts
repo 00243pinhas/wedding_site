@@ -5,7 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 
 export interface MemberResponseInput {
   memberId: string;
-  attending: boolean;
+  attending: boolean | null;
 }
 
 export interface RsvpInput {
@@ -57,10 +57,12 @@ export async function submitRsvp(input: RsvpInput): Promise<RsvpResult> {
     };
   }
 
-  // Whoever opens the code answers for the whole family, and every member
-  // gets a definite status — a member missing from input.responses (e.g. a
-  // checkbox that was never touched) is treated as not attending, not left
-  // unanswered.
+  // Whoever opens the code answers for the whole family. Each member is
+  // one of three states — true (coming), false (not coming), or null (no
+  // response yet) — and a member missing from input.responses (e.g. the
+  // form never rendered them) is left at null, not coerced to "not
+  // attending". responded_at only gets set once a member has an actual
+  // answer; it stays null alongside an unset attending.
   const validIds = new Set(members.map((m) => m.id));
   const responseByMember = new Map(
     input.responses
@@ -70,15 +72,16 @@ export async function submitRsvp(input: RsvpInput): Promise<RsvpResult> {
   const respondedAt = new Date().toISOString();
 
   const updateResults = await Promise.all(
-    Array.from(validIds).map((id) =>
-      supabase
+    Array.from(validIds).map((id) => {
+      const attending = responseByMember.get(id) ?? null;
+      return supabase
         .from("members")
         .update({
-          attending: responseByMember.get(id) ?? false,
-          responded_at: respondedAt,
+          attending,
+          responded_at: attending === null ? null : respondedAt,
         })
-        .eq("id", id),
-    ),
+        .eq("id", id);
+    }),
   );
 
   if (updateResults.some((r) => r.error)) {

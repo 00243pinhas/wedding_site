@@ -19,6 +19,8 @@ export interface AdminFamilyRow {
   members: AdminMemberRow[];
   totalMembers: number;
   attendingCount: number;
+  notComingCount: number;
+  noResponseCount: number;
   respondedCount: number;
 }
 
@@ -26,8 +28,9 @@ export interface AdminSummary {
   totalFamilies: number;
   totalMembers: number;
   totalAttending: number;
+  totalNotComing: number;
+  totalNoResponse: number;
   totalResponded: number;
-  totalDeclined: number;
 }
 
 // RLS scopes both selects to the admin emails in the `authenticated`
@@ -78,6 +81,10 @@ export async function getAdminDashboardData(
       totalMembers: familyMembers.length,
       attendingCount: familyMembers.filter((m) => m.attending === true)
         .length,
+      notComingCount: familyMembers.filter((m) => m.attending === false)
+        .length,
+      noResponseCount: familyMembers.filter((m) => m.attending === null)
+        .length,
       respondedCount: familyMembers.filter((m) => m.attending !== null)
         .length,
     };
@@ -88,8 +95,9 @@ export async function getAdminDashboardData(
     totalFamilies: familyRows.length,
     totalMembers: allMembers.length,
     totalAttending: allMembers.filter((m) => m.attending === true).length,
+    totalNotComing: allMembers.filter((m) => m.attending === false).length,
+    totalNoResponse: allMembers.filter((m) => m.attending === null).length,
     totalResponded: allMembers.filter((m) => m.attending !== null).length,
-    totalDeclined: allMembers.filter((m) => m.attending === false).length,
   };
 
   return { families: familyRows, summary };

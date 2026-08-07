@@ -16,8 +16,8 @@ function csvRow(values: string[]): string {
 }
 
 function attendingLabel(attending: boolean | null): string {
-  if (attending === true) return "Attending";
-  if (attending === false) return "Not attending";
+  if (attending === true) return "Coming";
+  if (attending === false) return "Not coming";
   return "No response";
 }
 
