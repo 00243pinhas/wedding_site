@@ -22,8 +22,8 @@ const DRESS_CODE_WOMEN =
 const DRESS_CODE_NOTE =
   "The ceremony is outdoors on grass, so please choose footwear accordingly.";
 
-const DRESS_CODE_GROOM_IMAGE_SRC = "/assets/dress-code-groom.png";
-const DRESS_CODE_BRIDE_IMAGE_SRC = "/assets/dress-code-bride.png";
+const DRESS_CODE_GROOM_IMAGE_SRC = "/assets/dress-code-groom.jpeg";
+const DRESS_CODE_BRIDE_IMAGE_SRC = "/assets/dress-code-bride.jpeg";
 
 // Order confirmed by the client — no fixed times given except the 5:00 PM
 // ceremony above, so this renders as a plain sequence, not a timed agenda.
@@ -49,9 +49,12 @@ export default function DetailsPage() {
           <h2 className="font-display text-2xl text-navy sm:text-3xl">
             Ceremony
           </h2>
-          <div className="mt-4 space-y-1 text-lg text-ink">
+          <div className="mt-4 text-lg text-ink">
             <p>{CEREMONY_COPY}</p>
-            <p>{VENUE_NAME}</p>
+            <p className="mt-4 text-sm font-bold tracking-[0.2em] text-navy uppercase">
+              Address:
+            </p>
+            <p className="mt-2">{VENUE_NAME}</p>
             <p>{VENUE_ADDRESS}</p>
           </div>
         </div>
@@ -60,9 +63,12 @@ export default function DetailsPage() {
           <h2 className="font-display text-2xl text-navy sm:text-3xl">
             Reception
           </h2>
-          <div className="mt-4 space-y-1 text-lg text-ink">
+          <div className="mt-4 text-lg text-ink">
             <p>{RECEPTION_COPY}</p>
-            <p>{VENUE_NAME}</p>
+            <p className="mt-4 text-sm font-bold tracking-[0.2em] text-navy uppercase">
+              Address:
+            </p>
+            <p className="mt-2">{VENUE_NAME}</p>
             <p>{VENUE_ADDRESS}</p>
           </div>
         </div>
