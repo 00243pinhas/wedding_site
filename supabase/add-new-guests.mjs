@@ -75,6 +75,7 @@ const NEW_INDIVIDUALS = [
   "Hina",
   "Arshia",
   "Chris",
+  "LUSANDA",
 ];
 
 const toAdd = [

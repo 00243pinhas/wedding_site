@@ -33,14 +33,13 @@ function getTimeLeft(): TimeLeft | null {
   };
 }
 
-function Digit({ value }: { value: string }) {
+function Digit({ value, animate }: { value: string; animate: boolean }) {
   const prefersReducedMotion = useReducedMotion();
 
   return (
     <motion.span
       key={value}
-      suppressHydrationWarning
-      initial={prefersReducedMotion ? false : { opacity: 0 }}
+      initial={!animate || prefersReducedMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={
         prefersReducedMotion ? { duration: 0 } : { duration: 0.3, ease: EASE }
@@ -52,10 +51,21 @@ function Digit({ value }: { value: string }) {
   );
 }
 
-function Unit({ value, label }: { value: number; label: string }) {
+function Unit({
+  value,
+  label,
+  animate,
+}: {
+  value: number | null;
+  label: string;
+  animate: boolean;
+}) {
   return (
     <div className="flex flex-col items-center">
-      <Digit value={String(value).padStart(2, "0")} />
+      <Digit
+        value={value === null ? "--" : String(value).padStart(2, "0")}
+        animate={animate}
+      />
       <span className="mt-2 text-xs tracking-[0.2em] text-navy uppercase">
         {label}
       </span>
@@ -63,15 +73,21 @@ function Unit({ value, label }: { value: number; label: string }) {
   );
 }
 
+// Server-rendered/cached HTML must never carry a real "now" — it always
+// starts null (placeholder) here and gets its first real value from the
+// client's own clock in the effect below, so no cached page can freeze it.
 export function Countdown() {
-  const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(getTimeLeft);
+  const [mounted, setMounted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
 
   useEffect(() => {
+    setMounted(true);
+    setTimeLeft(getTimeLeft());
     const id = setInterval(() => setTimeLeft(getTimeLeft()), 1000);
     return () => clearInterval(id);
   }, []);
 
-  if (!timeLeft) {
+  if (mounted && !timeLeft) {
     return (
       <section className="bg-ivory pt-10 md:pt-14">
         <p className="mx-auto max-w-[520px] px-4 text-center font-display text-2xl text-navy sm:px-6 sm:text-3xl">
@@ -84,10 +100,22 @@ export function Countdown() {
   return (
     <section className="bg-ivory pt-10 md:pt-14">
       <div className="mx-auto flex max-w-[520px] items-start justify-center gap-4 px-4 text-center sm:gap-12 sm:px-6">
-        <Unit value={timeLeft.days} label="Days" />
-        <Unit value={timeLeft.hours} label="Hours" />
-        <Unit value={timeLeft.minutes} label="Minutes" />
-        <Unit value={timeLeft.seconds} label="Seconds" />
+        <Unit value={timeLeft?.days ?? null} label="Days" animate={mounted} />
+        <Unit
+          value={timeLeft?.hours ?? null}
+          label="Hours"
+          animate={mounted}
+        />
+        <Unit
+          value={timeLeft?.minutes ?? null}
+          label="Minutes"
+          animate={mounted}
+        />
+        <Unit
+          value={timeLeft?.seconds ?? null}
+          label="Seconds"
+          animate={mounted}
+        />
       </div>
     </section>
   );
