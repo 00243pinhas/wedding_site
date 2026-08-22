@@ -60,22 +60,17 @@ function generateUniqueInviteCode(existingCodes) {
 // New batch supplied by the client. Families list member names; individuals
 // are family-of-one entries (family_name == member's own name).
 const NEW_FAMILIES = [
-  { family_name: "The Majoulian Family", members: ["Tamar", "David"] },
-  {
-    family_name: "The Petrushinin Family",
-    members: ["Andrey Petrushinin", "Natasha Petrushinin"],
-  },
+  { family_name: "The Queen Family", members: ["Queen", "King"] },
+  { family_name: "The Amogu Family", members: ["Tosin", "Victor"] },
+  { family_name: "The Laklkian Family", members: ["Talar", "Ohannes", "Emmanuel"] },
 ];
 
 const NEW_INDIVIDUALS = [
-  "Auntie Sega",
-  "Auntie Chilalu",
-  "Auntie Chawa",
-  "Uncle Boago",
-  "Hina",
-  "Arshia",
-  "Chris",
-  "LUSANDA",
+  "Ali",
+  "Arman",
+  "Baba Bertin",
+  "Grace",
+  "Alain Cytheree",
 ];
 
 const toAdd = [
